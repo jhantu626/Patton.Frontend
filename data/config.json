@@ -1,0 +1,108 @@
+{
+    "API_URL": "https://10.212.134.201:7041/api/", 
+    "API_URL": "https://localhost:7041/api/",
+   
+
+    "EndPoints": {
+        "Login": "account/login",
+
+        "users_profile_add": "user/create",
+        "users_profile_search": "user/search",
+        "users_profile_update": "user/save",
+        "users_change_password": "user/ChangePassword",
+        "admin_change_password": "user/ChangePasswordAdmin",
+        
+        "warehouse_release_transfer": "workbook/search",
+        "stockvalidate": "workbook/stockvalidate",
+        "savedata": "workbook/save",
+        "deletedata": "workbook/delete",
+        "loginextent": "workbook/loginextend",
+        "fdestination": "workbook/fdestination",
+        "partno" : "workbook/parts",
+
+        "lookup": "party/lookup",
+        "CreateCustomer": "party/save",
+        "ConsigneeCode": "warehouse/search",
+        "CreateConsignee": "warehouse/save",
+
+        "destsearch": "destination/destsearch",
+        "Createdestination": "destination/save",
+
+        "RateDateSearch": "rate/datelookup",
+        "RateItemSearch": "rate/itemlookup",
+
+        "ProductSearch": "product/lookup",
+        
+        "PartyReferenceSearch": "partyreference/lookup",
+        "CreatePartyReference": "partyreference/save",
+
+        "ClearingAgentSearch": "clearingagent/lookup",
+        "CreateClearingAgent": "clearingagent/save",
+
+        "TransporterSearch": "transporter/lookup",
+        "CreateTransporter": "transporter/save",
+
+        "HSCodeSearch": "hscode/lookup",
+        "HSCodeSave": "hscode/save",
+
+        "CustomerRelease": "customerrelease/search",
+        "CustomerReleaseView": "customerrelease/lookupview",
+        "WarehouseTransit": "warehousetransit/lookup",
+
+        "BreakRetainPalletPartyInvoice": "breakretainpallet/partyinvoice",
+        "BreakRetainPalletList": "breakretainpallet/breakretainlist",
+        "BreakRetainPalletCheck": "breakretainpallet/breakretainckeck",
+        "BreakPalletToCarton": "breakretainpallet/palletbreak",
+        "RetainCartonToPallet": "breakretainpallet/retainpallet",
+
+        "ErrorLogSearch": "errorlog/lookup",
+
+        "CustomerWebReleaseMailSend": "email/customerwebreleasemailsend",
+
+        "releaseorderadd": "releaseorder/save",
+        "releaseorder": "releaseorder/lookup",
+        "deleteorder": "releaseorder/orderdelete",
+        "deleteorderitem": "releaseorder/orderitemdelete",
+        "orderitemnewadd": "releaseorder/orderitemnewadd",
+        "ordersingleitemget": "releaseorder/orderItemLookup",
+        "OrderValidationSave": "releaseorder/OrderValidationSave",
+
+        "orderdispatchlist": "workbook/dispatchsearch",
+        "pendingdispatchsearch": "workbook/pendingdispatchsearch",
+
+        "warehouseList": "warehouse/partywarehousesearch",
+        "warehouseCreate": "warehouse/partywarehousesave",
+
+        "PartyWiseWarehouseList": "warehouse/PartyWiseWarehouseSearch",
+        "PartyWiseShiptoList": "customerrelease/partywiseshiptolist",
+
+        "usermenulist": "menu/getusermenu",
+        "PoNumberList": "releaseorder/PoNumber",
+
+        "PartMoqSearch": "releaseorder/PartMoqSearch",
+
+        "SaveRoleGroup": "Roles/SaveRoleGroup",
+        "SearchRoleGroup": "Roles/SearchRoleGroup",
+        "RoleGroupRoleMap": "Roles/SearchRoleGroupRoleMap",
+        "RoleGroupSaveRemove": "Roles/RoleGroup/SaveMap",
+
+        "ReleaseInvoiceSearch": "ReleaseInvoice/search",
+
+        "pendingInvoices": "ReleaseInvoice/pendingInvoices?",
+        "BuyerFromConsignee": "ReleaseInvoice/BuyerFromConsignee?",
+        "completedInvoices": "ReleaseInvoice/completedInvoices?",
+
+        "ReleaseInvoiceSave": "ReleaseInvoice/save",
+
+        "SearchUserRoleGroup": "Roles/SearchUserRoleGroup",
+        "SaveRole": "Roles/Role/save",
+        "UserRoleGroupSave": "Roles/UserRoleGroup/SaveMap",
+
+        "ReleaseInvoiceDelete": "ReleaseInvoice/delete",
+        "ReleaseInvoicedetails" : "ReleaseInvoice/details",
+
+        "PostInvoiceToWorkbookDelete" : "PostInvoiceToWorkbook/delete",
+        "PostInvoiceToWorkbookPost" : "PostInvoiceToWorkbook/post"
+    }
+    
+}

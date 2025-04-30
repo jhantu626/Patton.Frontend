@@ -1,0 +1,33 @@
+{
+    "API_URL": "https://localhost:7041/api/",
+    "EndPoints": {
+        "Login": "account/login",
+
+        "users_profile_add": "user/create",
+        
+        "warehouse_release_transfer": "workbook/search",
+        "stockvalidate": "workbook/stockvalidate",
+        "savedata": "workbook/save",
+        "deletedata": "workbook/delete",
+        "loginextent": "workbook/loginextend",
+        "fdestination": "workbook/fdestination",
+        "partno" : "workbook/parts",
+
+        "lookup": "party/lookup",
+        "CreateCustomer": "party/save",
+        "ConsigneeCode": "warehouse/search",
+        "CreateConsignee": "warehouse/save",
+
+        "destsearch": "destination/destsearch",
+        "Createdestination": "destination/save",
+        
+        "PartyReferenceSearch": "partyreference/lookup",
+        "CreatePartyReference": "partyreference/save",
+
+        "ClearingAgentSearch": "clearingagent/lookup",
+        "CreateClearingAgent": "clearingagent/save",
+
+        "TransporterSearch": "transporter/lookup",
+        "CreateTransporter": "transporter/save"
+    }
+}

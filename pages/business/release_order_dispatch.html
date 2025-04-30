@@ -1,0 +1,305 @@
+<main>
+    <div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="isBodyLoading">
+        <div class="ldio-4j5ay0xf86g">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <div ng-if="isLoading" class="loader ploader my-loader pb-4 ordLoader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="" class="">
+                    <div class="card mb-3">
+                        <div class="card-header d-flex align-items-center justify-content-between p-3 py-2">
+                            <h5 class="card-title text-uppercase mb-0">RELEASE DISPATCH</h5>
+                        </div>
+                        <div class="card-body workRelease">
+                            <div class="search-pannel rounded mb-4 pt-3 pb-4">
+                                <div class="row justify-content-center searching-area">
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span>Customer Name</span>
+                                            <select class="w-100" name="search_customer" id="search_customer"
+                                                ng-model="model.partyCode" ng-change="getFdestination(model.partyCode)">
+                                                <option value="">Select Customer</option>
+                                                <option ng-repeat="option in datalookup" value="{{option.code}}">
+                                                    {{option.code}} ({{option.name}})
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span>Warehouse Name</span>
+                                            <select class="w-100" name="search_warehouse" id="search_warehouse">
+                                                <option value="">Select Warehouse</option>
+                                                <option ng-repeat="destination in FdestinationList"
+                                                    value="{{destination.warehouseName}}">
+                                                    {{destination.warehouseName}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span>Release Number</span>
+                                            <input type="text" name="txt_release_no" id="txt_release_no" class="w-100">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <span>Ship to Party</span>
+                                            <select class="w-100" name="search_ship_to_party" id="search_ship_to_party">
+                                                <option value="">Select Ship to Party</option>
+                                                <option ng-repeat="option in ConsigneeCodeList" value="{{option.name}}">
+                                                    {{option.name}} ({{option.consigneeName}})
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-auto">
+                                        <div class="form-group">
+                                            <span>From Date</span>
+                                            <input type="text" name="txt_search_order_from_date"
+                                                id="txt_search_from_date" class="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-auto">
+                                        <div class="form-group">
+                                            <span>To Date</span>
+                                            <input type="text" name="txt_search_order_to_date" id="txt_search_to_date"
+                                                class="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <a href="javascript:void(0);" class="btn_search py-1 d-inline-block mt-4"
+                                            style="margin-bottom: 3px;" ng-click="getDispatchList()">SEARCH</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body my-table-body" id="warehouse_release"
+                                ng-if="Orderdispatchlist.length>0">
+                                <div ng-if="Orderdispatchlist.length>0">
+                                    <table class="table">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th class="text-center">Order No.</th>
+                                                <th class="text-center">Part No.</th>
+                                                <th class="text-center">Item<br><span class="text-primary">Size</span>
+                                                </th>
+                                                <th class="text-center">
+                                                    No of Carton / Carton Qty<br>
+                                                    <span class="text-primary">No of Pallet / No of Qty</span>
+                                                </th>
+                                                <th class="text-center">Prefix / Start No</th>
+                                                <th class="text-center">Quantity</th>
+                                                <th class="text-center">No. of Pallet / Carton</th>
+                                                <th class="text-center">Balance Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="dispatch in Orderdispatchlist">
+                                            <tr>
+                                                <td colspan="9" class="text-start table-warning">
+                                                    <input type="checkbox" class="allcheckBoxClass{{$index}}"
+                                                        id="checkBoxClass{{$index}}" ng-model="dispatch.masterSelected"
+                                                        ng-change="checkAll($index)">
+                                                    <b>Release No :
+                                                        {{dispatch.itemNumber}} | Release Date : {{dispatch.date |
+                                                        date:'dd-MM-y' : 'UTC'}} | Ship to Party :
+                                                        {{dispatch.consignee.code}}</b>
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat="item in dispatch.items">
+                                                <td>
+                                                    <label class="check-container">
+                                                        <input type="checkbox" class="checkBoxClass{{$parent.$index}}"
+                                                            id="chkbor{{$parent.$index+1}}{{$index+1}}"
+                                                            ng-model="item.selected"
+                                                            ng-change="updateSelectedItems(item, dispatch)">
+                                                        <div class="checkmark"></div>
+                                                    </label>
+                                                </td>
+                                                <td>{{item.invoiceNumber}}</td>
+                                                <td>{{item.partNo}}</td>
+                                                <td>{{item.item}}<br><span class="text-primary">{{item.size}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="item.cartons > 0 && item.pallets == 0">
+                                                        {{item.cartons}} / {{item.cartonQuantity}}
+                                                    </span>
+                                                    <span class="text-primary fw-semibold"
+                                                        ng-if="item.pallets > 0 && item.cartons == 0">
+                                                        {{item.pallets}} / {{item.quantity}}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center text-primary fw-semibold">
+                                                    {{item.prefix}} / {{item.startno}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <span
+                                                        ng-if="item.cartons > 0 && item.pallets == 0">{{item.cartonQuantity}}</span>
+                                                    <span
+                                                        ng-if="item.pallets > 0 && item.cartons == 0">{{item.quantity}}</span>
+                                                </td>
+                                                <td>
+                                                    <!-- <span ng-if="item.cartons > 0 && item.pallets == 0">
+                                                qty={{item.cartons}}
+                                            </span>
+                                            <span ng-if="item.pallets > 0 && item.cartons == 0">
+                                                qty={{item.pallets}}
+                                            </span> -->
+
+                                                    <!-- <input type="text" name="qty{{$parent.$index+1}}{{$index+1}}" 
+                                                   id="qty{{$parent.$index+1}}{{$index+1}}" 
+                                                   ng-model="item.qty" 
+                                                   ng-init="item.qty = item.cartons > 0 ? item.cartons : item.pallets"> -->
+
+                                                    <input class="d-none" type="text" id="qtyy{{$parent.$index+1}}{{$index+1}}" ng-model="item.qty"
+                                                        ng-init="item.qty = item.cartons > 0 ? item.cartons : item.pallets">
+
+                                                    <!-- Required quantity input -->
+                                                    <input type="text" name="pal_cart{{$parent.$index+1}}{{$index+1}}"
+                                                        id="pal_cart{{$parent.$index+1}}{{$index+1}}"
+                                                        class="form-control shadow-none req-qty"
+                                                        ng-model="item.reqQuantity"
+                                                        ng-keyup="check_qty($parent.$index+1, $index+1)"
+                                                        oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                                                        ng-blur="updateSelectedItems(item, dispatch)"
+                                                        ng-init="item.reqQuantity = item.cartons > 0 ? item.cartons : item.pallets">
+                                                </td>
+                                                <td class="text-center">
+                                                    <span
+                                                        ng-if="item.cartons > 0 && item.pallets == 0">{{item.cartonQuantity}}</span>
+                                                    <span
+                                                        ng-if="item.pallets > 0 && item.cartons == 0">{{item.quantity}}</span>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="text-center mt-2 mb-2 notFound" data-ng-if="norRsultFound !== ''">
+                                    <h4 class="text-danger fs-6">{{norRsultFound}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" ng-if="Orderdispatchlist.length>0">
+                        <div class="card-header d-flex align-items-center justify-content-between p-3 py-2">
+                            <h5 class="card-title text-uppercase mb-0 py-1">DISPATCH DETAILS</h5>
+                        </div>
+                        <div class="card-body workRelease">
+                            <div class="row g-4">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <span>BOL No.</span>
+                                        <input type="text" name="trackingNumber" id="trackingNumber" class="w-100">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <span>Date</span>
+                                        <input type="date" class="" name="shipmentDate" id="shipmentDate" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <span>Remarks</span>
+                                        <textarea name="remarks" id="remarks" class="form-control shadow-none w-100"
+                                            style="resize: none; height: 100px;" id=""></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 justify-content-center text-center py-3">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-dark mx-1"
+                                ng-click="createDispatchData()">SAVE</a>
+                            <a href="#" class="btn btn-sm btn-primary mx-1 d-none">SEND MAIL</a>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-2 mb-2 notFound" data-ng-if="norRsultFound !== ''">
+                        <h4 class="text-danger fs-6">{{norRsultFound}}</h4>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script>
+    // $(function () {
+
+
+    // });
+
+    $(document).ready(function () {
+
+        $("#txt_search_from_date").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $("#txt_search_to_date").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+        $("#my_date").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+        $("#search_customer").select2();
+        $("#search_warehouse").select2();
+        $("#search_ship_to_party").select2();
+
+        $("#ckbCheckAll").click(function () {
+            $(".checkBoxClass").attr('checked', this.checked);
+        });
+
+        $("#ckbCheckAll2").click(function () {
+            $(".checkBoxClass2").attr('checked', this.checked);
+        });
+
+        // $('#release_order_edit').on('shown.bs.modal', function () 
+        // {
+        //     $('#txt_order_customer').select2({
+        //         dropdownParent: $('#release_order_edit')  // Attach the dropdown to the modal
+        //     });
+
+        //     $('#txt_order_ship_to_party').select2({
+        //         dropdownParent: $('#release_order_edit')  // Attach the dropdown to the modal
+        //     });
+        // });    
+    });
+</script>

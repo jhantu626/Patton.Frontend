@@ -1,0 +1,531 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
+<!-- Main -->
+<main class="position-relative">
+
+  <div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="list && isBodyLoading">
+    <div class="ldio-4j5ay0xf86g">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <div ng-if="list && isLoading" class="loader ploader">
+    <div class="dot dot-1"></div>
+    <div class="dot dot-2"></div>
+    <div class="dot dot-3"></div>
+    <div class="dot dot-4"></div>
+    <div class="dot dot-5"></div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12" ng-if="list">
+        <div class="card">
+          <div class="card-header d-flex align-items-center justify-content-between heading-sticky">
+            <h5 class="card-title text-uppercase mb-0">Release Order Entry List</h5>
+            <a href="javascript:void(0);" ng-if="add" data-bs-toggle="modal" data-bs-target="#add_release_order"
+              class="btn btn-sm btn-dark mx-1">Add Release Order</a>
+          </div>
+
+          <form action="" class="card-body workRelease">
+
+            <div class="row justify-content-center align-items-end g-2 mb-4 searching-area">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span>Order Number</span>
+                  <input type="text" name="txt_search_order_no" id="txt_search_order_no" class="w-100">
+                </div>
+              </div>
+              <div class="col-md-auto">
+                <div class="form-group">
+                  <span>Order From Date</span>
+                  <input type="text" name="txt_search_order_from_date" id="txt_search_order_from_date" class="">
+                </div>
+              </div>
+              <div class="col-md-auto">
+                <div class="form-group">
+                  <span>Order To Date</span>
+                  <input type="text" name="txt_search_order_to_date" id="txt_search_order_to_date" class="">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span>Customer</span>
+                  <select class="w-100" name="search_customer" id="search_customer">
+                    <option value="">All Customer</option>
+                    <option ng-repeat="option in datalookup1" value="{{option.code}}">
+                      {{option.code}} ({{option.name}})
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span>Ship to Party</span>
+                  <select class="w-100" name="search_ship_to_party" id="search_ship_to_party">
+                    <option value="">All Ship to Party</option>
+                    <option ng-repeat="option in ConsigneeCodeList1" value="{{option.code}}">
+                      {{option.code}} ({{option.name}})
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-auto">
+                <a href="javascript:void(0);" class="btn_search py-1 d-inline-block" style="margin-bottom: 3px;"
+                  ng-click="search_order()">SEARCH</a>
+              </div>
+            </div>
+
+            <div data-ng-if="ReleaseOrderList.length>0">
+              <table class="table table-bordered dataTable" ng-rows="ReleaseOrderList">
+                <thead class="table-secondary">
+                  <tr style="background-color: #f2f2f2;">
+                    <th ng-sortable>Order Number</th>
+                    <th ng-sortable>Order Date</th>
+                    <th ng-sortable>Customer</th>
+                    <th ng-sortable>Ship to Party</th>
+                    <th ng-sortable>Ship to Address</th>
+                    <th ng-sortable>Status</th>
+                    <th ng-sortable>Revision No</th>
+                    <th ng-sortable>Revision Date</th>
+                    <th ng-sortable>Created On</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-row>
+                    <td>{{row.orderNo}}</td>
+                    <td>{{row.orderDate | date:'dd-MMM-yyyy'}}</td>
+                    <td>{{row.customer}}</td>
+                    <td>{{row.shipToParty}}</td>
+                    <td>{{row.shipToAddress}}</td>
+                    <td>{{row.status}}</td>
+                    <td>{{row.revisionNo}}</td>
+                    <td>{{row.revisionDate | date:'dd-MMM-yyyy'}}</td>
+                    <td>{{row.createdOn | date:'dd-MMM-yyyy'}}</td>
+                    <td class="text-center">
+                      <a href="javascript:void(0);" ng-show="itemlist" ng-click="GetOrderDetails(row.releaseOrderId,1)">
+                        <i class="ri-eye-line text-danger" data-bs-toggle="modal"
+                          data-bs-target="#release_order_view"></i>
+                      </a>
+
+                      <a href="javascript:void(0);" ng-show="edit" class="ms-2"
+                        ng-click="GetOrderDetails(row.releaseOrderId,2)">
+                        <i class="ri-edit-2-fill text-danger" data-bs-toggle="modal"
+                          data-bs-target="#release_order_edit"></i>
+                      </a>
+
+                      <a href="javascript:void(0);" ng-show="delete" class="ms-2"
+                        ng-click="deleteOrder(row.releaseOrderId,row.orderNo,row.customer)">
+                        <i class="ri-delete-bin-line text-danger"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="text-center mt-3 mb-3 notFound" data-ng-if="norRsultFound">
+              <h3 class="text-danger fs-6">{{norRsultFound}}</h3>
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+
+      <div class="col-md-12 unauthorize" ng-if="!list">
+        <div class="">
+          <img src="assets/images/warning.png" style="width: 100px;">
+          <h1 class="mt-3">401</h1>
+          <p class="fs-4">A request was not authorized</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<div class="modal fade" id="add_release_order" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Release Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" class="modal-body bg-light">
+        <div class="form-group mb-2">
+          <span>Upload Order Excel</span>
+          <input type="file" name="excelFile" id="excelFile" ng-model="excelFile" class="w-100">
+        </div>
+        <div class="col-12 text-center">
+          <button class="btn btn-sm btn-dark mx-1" type="button" ng-click="uploadExcel()" class="btn btn-sm btn-dark mx-1" id="upload_btn">
+            <span role="status">Submit</span>
+          </button>
+
+          <button class="btn btn-sm btn-dark mx-1" type="button" disabled id="upload_btn_loader" style="display: none;">
+              <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              <span role="status">Loading...</span>
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div ng-show="itemlist" class="modal fade" id="release_order_view" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header flex-column">
+        <div class="card-header d-flex w-100 justify-content-between p-2">
+          <h5 class="modal-title" id="exampleModalLabel">Release Order View</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <table class="table table-bordered mb-0 mt-3">
+          <thead class="table-secondary release-order">
+            <tr>
+              <th>Order Number</th>
+              <td>
+                <span id="order_no"></span>
+                <input type="hidden" class="w-100 readonly" name="txt_release_order_id1" id="txt_release_order_id1"
+                  readonly>
+              </td>
+              <th>Order Date</th>
+              <td><span id="order_date"></span></td>
+              <th>Customer</th>
+              <td><span id="order_customer"></span></td>
+            </tr>
+            <tr>
+              <th>Ship To Party</th>
+              <td><span id="order_ship_to_party"></span></td>
+              <th>Revision Number</th>
+              <td>
+                <span id="revision_no"></span>
+              </td>
+              <th>Revision Date</th>
+              <td><span id="revision_date"></span></td>
+            </tr>
+            <tr>
+              <th>Ship to Address</th>
+              <td colspan="3"><span id="order_ship_to_address"></span></td>
+              <th>Total Value (USD)</th>
+              <td class="text-right">{{totalValue.toFixed(4)}}</td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-body bg-light pt-0 mt-3">
+        <div data-ng-if="OrderDetailList.length>0">
+          <div class="text-right mt-2 mb-2">
+            <a href="javascript:void(0)" class="btn btn-sm btn-warning mx-2 ng-scope" ng-click="exportToExcel()">Convert to Excel</a>
+          </div>
+          
+          <table class="table table-bordered mb-0">
+            <thead class="table-secondary sticky-top">
+              <tr style="background-color: #f2f2f2;">
+                <th>Sequence No</th>
+                <th>Part No</th>
+                <th>Qty (PC)</th>
+                <th>Unit Rate (PC)</th>
+                <th>Value (USD)</th>
+                <th>Required Date</th>
+                <th>Buyer Name</th>
+                <th>Revision No</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in OrderDetailList">
+                <td>{{item.sequenceNo}}</td>
+                <td>{{item.partNo}}</td>
+                <td class="text-right">{{item.qty}}</td>
+                <td class="text-right">{{item.unitRate}}</td>
+                <td class="text-right">{{(item.qty*item.unitRate).toFixed(4)}}</td>
+                <td>{{item.requiredDate | date:'dd-MMM-yyyy'}}</td>
+                <td>{{item.buyerName}}</td>
+                <td>{{item.revisionNo}}</td>
+                <td>
+                  <span class="d-flex align-items-center justify-content-center">
+                    <span>{{item.status}}</span>
+                    <i data-ng-if="item.status==='Error'" class="custom-tooltip-patton ri-information-2-fill ms-1 text-danger" data-bs-title="{{item.errorstatusdescription}}"></i>
+                  </span> 
+                </td>
+                <td class="text-center">
+                  <a href="javascript:void(0);" ng-show="itemadd"
+                    data-ng-click="GetOrderItem(item.releaseOrderDetailsId)">
+                    <!-- <i class="ri-edit-2-fill text-danger" data-bs-toggle="modal" data-bs-target="#add_new_item"></i> -->
+                    <i class="ri-edit-2-fill text-danger"></i>
+                  </a>
+                  <a href="javascript:void(0);" ng-show="itemdelete" class="ms-2"
+                    data-ng-click="DeleteOrderItem(item.releaseOrderDetailsId,item.releaseOrderId)">
+                    <i class="ri-delete-bin-line  text-danger"></i>
+                  </a>
+                </td>
+              </tr>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+
+        <a href="javascript:void(0);" ng-show="itemadd" ng-click="OrderItemNewAdd()"
+          class="btn btn-sm btn-dark mx-1">NEW ADD</a>
+        <!-- <a href="javascript:void(0);" ng-click="create(mode)" class="btn btn-sm btn-dark mx-1">SAVE</a> -->
+      </div>
+
+
+      <div class="text-center mt-3 mb-3 notFound mx-3" data-ng-if="OrderDetailList.length<=0">
+        <h3 class="text-danger fs-6">No Record Found</h3>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="release_order_edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Order Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mt-4">
+          <form action="">
+            <div class="row gx-4 gy-3">
+              <div class="col-md-3">
+                <div class="form-group d-flex flex-column align-items-start">
+                  <span>Order No</span>
+                  <input type="hidden" class="w-100 readonly" name="txt_release_order_id" id="txt_release_order_id"
+                    readonly>
+                  <input type="text" class="w-100 readonly" name="txt_order_no" id="txt_order_no" readonly>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group d-flex flex-column align-items-start">
+                  <span>Order Date</span>
+                  <input class="w-100 readonly" type="text" class="form-control" name="txt_order_date"
+                    id="txt_order_date" readonly>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group d-flex flex-column align-items-start">
+                  <span>Rivision No</span>
+                  <input type="text" class="w-100" name="txt_rivision_no" id="txt_rivision_no">
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group d-flex flex-column align-items-start">
+                  <span>Rivision Date</span>
+                  <input class="w-100 readonly" type="text" class="form-control" name="txt_rivision_date"
+                    id="txt_rivision_date" readonly>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <span>Customer</span>
+                  <select class="w-100" name="txt_order_customer" id="txt_order_customer">
+                    <option value="">Select Customer</option>
+                    <option ng-repeat="option in datalookup" value="{{option.code}}"
+                      ng-selected="option.code==customer">
+                      {{option.code}} ({{option.name}})
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <span>Ship To Party</span>
+                  <select class="w-100" name="txt_order_ship_to_party" id="txt_order_ship_to_party">
+                    <option value="">Select Ship to Party</option>
+                    <option ng-repeat="option in ConsigneeCodeList" value="{{option.code}}"
+                      ng-selected="option.code==shipToparty">
+                      {{option.code}} ({{option.name}})
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group d-flex flex-column align-items-start">
+                  <span>Ship to Address</span>
+                  <textarea class="w-100" name="txt_order_ship_to_address" id="txt_order_ship_to_address"
+                    style="height: 100px; resize: none;"></textarea>
+                </div>
+              </div>
+
+            </div>
+
+            <hr>
+            <div class="col-12 text-center">
+              <a href="javascript:void(0);" ng-click="ReleaseOrderUpdate()" class="btn btn-sm btn-dark mx-1">UPDATE</a>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="add_new_item" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog  modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{order_item_lbl}} Release Order Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" class="modal-body">
+        <div class="row gx-4 gy-3">
+
+          <div class="col-md-6">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Sequence No</span>
+              <input type="text" class="w-100" name="txt_sequence_no" id="txt_sequence_no">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Part Number</span>
+              <input type="text" class="w-100" name="txt_part_no" id="txt_part_no">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Qty</span>
+              <input type="text" class="w-100" name="txt_qty" id="txt_qty"
+                oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Unit Rate</span>
+              <input type="text" class="w-100" name="txt_unit_rate" id="txt_unit_rate">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Unit</span>
+              <input type="text" class="w-100 readonly" name="txt_unit" id="txt_unit">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Required Date</span>
+              <input type="text" class="w-100 readonly" name="txt_required_date" id="txt_required_date" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Buyer Name</span>
+              <input type="text" class="w-100" name="txt_buyer_name" id="txt_buyer_name">
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group d-flex flex-column align-items-start">
+              <span>Revision No</span>
+              <input type="text" class="w-100" name="txt_revision_no" id="txt_revision_no">
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-12 text-center">
+          <input type="hidden" name="txt_mode" id="txt_mode" value="Create">
+          <input type="hidden" name="txt_release_order_details_id" id="txt_release_order_details_id" value="">
+          <a href="javascript:void(0);" ng-click="OrderItemNewSave()" class="btn btn-sm btn-dark mx-1">{{saveBtn}}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+  $(function () {
+    $("#txt_search_order_from_date").datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+
+    $("#txt_search_order_to_date").datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+
+    $("#txt_order_date").datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+
+    $("#txt_rivision_date").datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+
+    $("#txt_required_date").datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+  });
+
+  $(document).ready(function () {
+    $("#search_customer").select2();
+    $("#search_ship_to_party").select2();
+
+    $('#release_order_edit').on('shown.bs.modal', function () {
+      $('#txt_order_customer').select2({
+        dropdownParent: $('#release_order_edit')  // Attach the dropdown to the modal
+      });
+
+      $('#txt_order_ship_to_party').select2({
+        dropdownParent: $('#release_order_edit')  // Attach the dropdown to the modal
+      });
+    });
+  });
+
+  document.getElementById('openSecondModal').addEventListener('click', function () {
+    const secondModal = new bootstrap.Modal(document.getElementById('secondModal'));
+    secondModal.show();
+    setTimeout(() => {
+      const backdrops = document.querySelectorAll('.modal-backdrop');
+      if (backdrops.length > 1) {
+        backdrops[1].style.zIndex = '1064';
+      }
+    }, 100);
+  });
+</script>

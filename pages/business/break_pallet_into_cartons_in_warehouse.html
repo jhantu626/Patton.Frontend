@@ -1,0 +1,157 @@
+<style>
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 35px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b
+{
+    top: 70%;
+}
+
+.select2-results__option
+{
+    font-size: 12px;
+}
+
+.select2-container .select2-selection--single
+{
+    min-height: 37px;
+    border-radius: 5px;
+}
+</style>
+<!-- Main -->
+<main>
+<div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="list && isBodyLoading">
+    <div class="ldio-4j5ay0xf86g">
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+</div>
+
+
+    <div ng-if="list && isLoading" class="loader ploader my-loader brk-pallet-loader pb-4">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Break / Retain Pallet</h5>
+                    </div>
+                    <form action="" class="card-body workRelease">
+                        <div class="p-3 bg-gray2 rounded mb-4">
+                            <div class="row">
+
+                                <div class="col-md-auto">
+                                    <div class="d-flex">
+                                        <div class="form-group me-3">
+                                            <span class="text-start">Customer</span>
+                                            <div class="d-flex align-items-center">
+                                                <select class="w-100 bg-white" style="width: 300px;" name="partyCode" 
+                                                        ng-model="model.partyCode" id="partyCode" ng-change="get_party_invoice_details_list(model.partyCode)">
+                                                    <option value="">Select Customer</option>
+                                                    <option ng-repeat="option in CustomerList" value="{{option.code}}">
+                                                        {{option.code}} ({{option.name}})
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group me-3">
+                                            <span class="text-start">Invoice No</span>
+                                            <div class="d-flex align-items-center">
+                                                <select class="w-100 bg-white" style="width: 300px;" name="Invoice" ng-model="model.Invoice" id="Invoice" ng-change="get_pallet_item_list()">
+                                                    <option value="" ng-select>Select Invoice</option>
+                                                    <option ng-repeat="invoice in PartyInvoiceList" value="{{invoice}}">
+                                                        {{invoice}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <span class="text-start">Type</span>
+                                            <div class="d-flex align-items-center">
+                                                <select class="w-100 bg-white" style="width: 300px;" name="breakretain" ng-model="model.breakretain" id="breakretain" ng-change="get_pallet_item_list()">
+                                                    <option value="1">Break Pallet</option>
+                                                    <option value="0">Retain Pallet</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-ng-if="BreakRetainPalletList.length > 0">
+                            <table class="table table-bordered mt-3" >
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>Part No</th>
+                                        <th>Size</th>
+                                        <th>Item</th>
+                                        <th>Prefix</th>
+                                        <th>Start No</th>
+                                        <th>Break / Retain Pallet</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in BreakRetainPalletList">
+                                        <td>{{item.partNo}}</td>
+                                        <td>{{item.size}}</td>
+                                        <td>{{item.item}}</td>
+                                        <td>{{item.prefix}}</td>
+                                        <td>{{item.startno}}</td>
+                                        <td>
+                                            <input type="hidden" value="{{item.slno}}" name="slno{{$index}}" id="slno{{$index}}">
+                                            <span data-ng-if="item.pallets>0" id="BreakPallet{{$index}}" style="color: #000;">
+                                                <a href="javascript:void(0)" ng-click="checkPalletCartoon($index)">Break Pallet</a>
+                                                <input type="hidden" value="0" name="BreakPalletConvert{{$index}}" id="BreakPalletConvert{{$index}}">
+                                            </span>
+
+                                            <span data-ng-if="item.pallets===0" id="RetainPallet{{$index}}" style="color: #000;">
+                                                <a href="javascript:void(0)" ng-click="checkCartoonPallet($index)">Retain Pallet</a>
+                                                <input type="hidden" value="0" name="BreakPalletConvert{{$index}}" id="BreakPalletConvert{{$index}}">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="justify-content-center d-flex">
+                                <input type="hidden" value="0" name="count" id="count">
+                                <a href="javascript:void(0);" ng-click="FinalSave()" class="btn btn-sm btn-dark mx-1">SAVE</a>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-2 mb-2 notFound" data-ng-if="norRsultFound !== ''">
+                            <h4 class="text-danger fs-6">{{norRsultFound}}</h4>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+$(document).ready(function () {
+        // Initialize select2
+        $("#partyCode").select2();
+        $("#Invoice").select2();
+        $("#breakretain").select2();
+    });
+</script>

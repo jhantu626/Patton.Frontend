@@ -1,0 +1,142 @@
+<!-- Main -->
+<main class="position-relative">
+    <div ng-if="list && isLoading" class="loader ploader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Party Reference Master</h5>
+                    </div>
+                    <form action="" class="card-body workRelease">
+                        <div class="d-flex justify-content-end mb-3">
+                            <a href="javascript:void(0);" ng-if="add" data-bs-toggle="modal" data-bs-target="#add_edit_party_reference"
+                                class="btn btn-sm btn-dark mx-1" ng-click="reset()">Add Party Reference</a>
+                        </div>
+
+                        <table class="table table-bordered mt-3 dataTable" ng-rows="PartyReferenceMasterList">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th ng-sortable>I Code</th>
+                                    <th ng-sortable>Party Reference</th>
+                                    <th ng-sortable>Name</th>
+                                    <th ng-sortable>Group</th>
+                                    <th ng-sortable>Harmonised</th>
+                                    <th ng-sortable>Tariff No US</th>
+                                    <th ng-sortable>Tariff No India</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-row>
+                                    <td>{{row.iCode}}</td>
+                                    <td>{{row.partyRef}}</td>
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.groupCode}}</td>
+                                    <td>{{row.harmonisedText}}</td>
+                                    <td>{{row.tariffNoUS}}</td>
+                                    <td>{{row.tariffNoInd}}</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#add_edit_party_reference"
+                                            ng-click="get_party_reference_details(row.iCode,row.partyRef,row.name)">
+                                            <i class="ri-edit-2-fill text-danger" ng-show="add"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Release (Modal) -->
+<div class="modal fade" id="add_edit_party_reference" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{PartyReferencelabel}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="modal-body">
+                <div class="row gx-4 gy-3">
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>I Code</span>
+                            <input type="text" class="w-100" name="code" id="code" data-ng-model="model.code" style="text-transform: uppercase;">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Party Reference</span>
+                            <input type="text" class="w-100" name="partyreference" id="partyreference" data-ng-model="model.partyreference">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Name</span>
+                            <input type="text" class="w-100" name="name" id="name" data-ng-model="model.name">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Group</span>
+                            <input type="text" class="w-100" name="group" id="group" data-ng-model="model.group">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Harmonised</span>
+                            <input type="text" class="w-100" name="harmonised" id="harmonised" data-ng-model="model.harmonised">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Tariff No US</span>
+                            <input type="text" class="w-100" name="tariffnous" id="tariffnous" data-ng-model="model.tariffnous" oninput="this.value=this.value.replace(/[^0-9.]/g,'');">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Tariff No India</span>
+                            <input type="text" class="w-100" name="tariffnoind" id="tariffnoind" data-ng-model="model.tariffnoind" oninput="this.value=this.value.replace(/[^0-9.]/g,'');">
+                        </div>
+                    </div>
+
+                </div>
+                <hr>
+                <div class="col-12 text-center">
+                    <div class="col-12 text-center">
+                        <a href="javascript:void(0);" ng-click="reset()" id="reset_btn"
+                            class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                        <a href="javascript:void(0);" ng-click="create(mode)"
+                            class="btn btn-sm btn-dark mx-1">{{add_btn}}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

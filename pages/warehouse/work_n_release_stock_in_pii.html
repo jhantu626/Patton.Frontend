@@ -1,0 +1,286 @@
+<!-- Main -->
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">WAREHOUSE RELEASE DATA</h5>
+                    </div>
+                    <form action="" class="card-body workRelease">
+                        <div class="p-3 bg-gray2 rounded mb-4">
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="radioOption d-flex align-items-center mb-3">
+                                        <label>
+                                            <input type="radio" name="type" data-ng-model="model.type" value="NORMAL"
+                                                ng-checked="true" data-ng-change="onRadioChanges()"> Normal
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="type" data-ng-model="model.type"
+                                                value="REJECTION" data-ng-change="onRadioChanges()">
+                                            Rejection
+                                        </label>
+
+                                        <div class="bg-gray4 px-2 py-1 rounded">
+                                            <label>
+                                                <input type="radio" name="source" data-ng-model="model.source"
+                                                    value="PIL" data-ng-change="onRadioChanges()"> From PIL
+                                            </label>
+                                            <label class="m-0">
+                                                <input type="radio" name="source" data-ng-model="model.source"
+                                                    value="PII" ng-checked="true" data-ng-change="onRadioChanges()"> From PII
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="radioOption d-flex align-items-center">
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="RELEASE" data-ng-change="onRadioChanges()"> Release
+                                        </label>
+                                        <label>
+
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="TRANSFER" data-ng-change="onRadioChanges()">
+                                            Transfer
+
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="STOCKIN" data-ng-checked="true" data-ng-change="onRadioChanges()">
+                                            Stock In
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="BREAK" data-ng-change="onRadioChanges()">
+                                            Break
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="STOCKADJLESS" data-ng-change="onRadioChanges()"> Stock Adj-Less
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-auto">
+                                    <div class="d-flex">
+                                        <div class="form-group">
+                                            <span>Transferor Code</span>
+                                            <input type="text" name="partyCode" data-ng-model="model.partyCode"
+                                                style="width: 130px;" ng-keyup="onPartyCodeHandler()">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Stock In Number</span>
+                                            <input type="text" name="itemNumber" ng-model="model.itemNumber"
+                                                style="width: 150px;" ng-keyup="onPartyCodeHandler()">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Stock In Date</span>
+                                            <input type="date" name="" id="">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Consignee Code</span>
+                                            <input type="text" name="" id="" style="width: 130px;">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Transferee</span>
+                                            <input type="text" name="" id="" style="width: 130px;">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>CF Destination</span>
+                                            <select name="" id="">
+                                                <option value=""></option>
+                                                <option value="JOHONASBORO">JOHONASBORO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Sl No.</th>
+                                    <th>Part No.<br>
+                                        Item<br>
+                                        Size
+                                    </th>
+                                    <th>
+                                        PO Number<br>
+                                        Invoice No<br>
+                                        Month
+                                    </th>
+                                    <th>Average QTY</th>
+                                    <th>No of Carton<br>
+                                        Carton QTY</th>
+                                    <th>No of Pallet / Pallet QTY<br>
+                                        Palpfix / Pal Start
+                                    </th>
+                                    <th>Sequence<br>
+                                        Reference<br>
+                                        DB Sl No
+                                    </th>
+                                    <th>F Destination</th>
+                                    <th>REF Buyer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="item in warehouseReleaseTransfer.items"
+                                    data-ng-if="warehouseReleaseTransfer.items">
+                                    <td>{{item.slno}}</td>
+                                    <td>
+                                        <span class="text-primary d-block">{{item.partNo}}</span>
+                                        <b>{{item.item}}</b>
+                                        <span class="text-warning d-block">{{item.size}}</span>
+                                    </td>
+                                    <td>
+                                        {{item.poNumber}} <br>
+                                        <span class="text-success d-block">{{item.invoiceNumber}}</span>
+                                        <span class="badge bg-secondary">{{item.month}}</span>
+                                    </td>
+                                    <td>{{item.quantity}}</td>
+                                    <td>{{item.cartons}} <br> {{item.cartonQuantity}}</td>
+                                    <td>{{item.pallets}} / <br> {{item.prefix}} / {{item.startno}}</td>
+                                    <td>
+                                        {{item.sequence}} <br> {{item.reference}}
+                                    </td>
+                                    <td>
+                                        <span class="text-warning">{{item.finalDeatination}}</span>
+                                    </td>
+                                    <td>{{item.refBuyer}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="btn btn-sm btn-dark mx-1">BACK</a>
+                            <a href="#" class="btn btn-sm btn-dark mx-1">SAVE</a>
+                            <a href="#" class="btn btn-sm btn-warning mx-1">CLEAR</a>
+                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addrelease"
+                                class="btn btn-sm btn-dark mx-1">ADD</a>
+                            <a href="#" class="btn btn-sm btn-danger mx-1">DELETE</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Release (Modal) -->
+<div class="modal fade" id="addrelease" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">RELEASE DATA ENTRY</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="modal-body">
+                <div class="row gx-4 gy-3">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>PART NO.</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>MONTH</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>AVGARGE QTY</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>PALLET QTY</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>SIZE</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>ITEM</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>PALPFIX</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>PAL START</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>NO OF PALLET</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>SL NO</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>NO OF CARTON</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>CARTON QTY</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>INVOICE NO.</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>PO NUMBER</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>F DESTINATION</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span>REF BUYER</span>
+                            <input type="text" name="" id="" class="w-100">
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="col-12 text-center">
+                    <a href="#" class="btn btn-sm btn-dark mx-1">ADD</a>
+                    <a href="#" class="btn btn-sm btn-dark mx-1">CLEAR</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

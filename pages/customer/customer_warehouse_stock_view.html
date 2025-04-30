@@ -1,0 +1,317 @@
+    <main>
+        <div ng-if="isLoading" class="loader ploader my-loader pb-4">
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+            <div class="dot dot-4"></div>
+            <div class="dot dot-5"></div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center justify-content-between heading-sticky">
+                            <h5 class="card-title text-uppercase mb-0">Warehouse Stock</h5>
+                            <select style="width:400px;" name="warehouse" id="warehouse" ng-model="selectedWarehouse" ng-change="get_warehouse_details(selectedWarehouse)">
+                                <option value="">Select Warehouse</option>
+                                <option data-ng-repeat="destination in WarehouseList" value="{{destination.warehouseName}}">{{destination.warehouseName}}</option>
+                            </select>
+                        </div>
+
+                        <div class="card-body pt-3" id="warehouse_release" style="display: none;">
+                            <div data-ng-if="CustomerWarehouseRelease && CustomerWarehouseRelease.length > 0">
+                                <h6 class="text-primary pt-4 mb-0 pb-4 my-heading bg-white">{{ PartyName }} - Stock at {{WarehouseLabel}}</h6>
+                                <table class="table text-center">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Part No.</th>
+                                            <th>Stock Quantity</th>
+                                            <th>Transit Quantity</th>
+                                            <th>Details</th>
+                                            <th>Pallet Quantity</th>
+                                            <th>No. of Pallets</th>
+                                            <th>Carton Quantity</th>
+                                            <th>No. of Cartons</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="item in CustomerWarehouseRelease">
+                                        <tr>
+                                            <td colspan="10" class="text-start table-warning"><b>{{ item.name }}</b></td>
+                                        </tr>
+
+                                        <tr ng-repeat="part in item.parts">
+                                            <td>{{part.partno}}
+                                                <input type="hidden" name="hpartno{{ $parent.$index + 1 }}{{ $index + 1 }}" id="hpartno{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{part.partno}}">
+                                            </td>
+                                            <td>{{part.qty+part.cartonqty}}</td>
+                                            <td>{{part.tqty}}</td>
+                                            <td>
+                                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#customer_warehouse_release_view" class="btn btn-sm btn-primary btn-rounded view_btn" ng-click="get_warehouse_release_view(part.partno,selectedWarehouse)">
+                                                    <i class="ri-eye-fill"></i> View
+                                                </a>
+                                            </td>
+                                            <td>{{part.palletqty}}</td>
+                                            <td>{{part.noofpallet}}</td>
+                                            <td>{{part.qtyincarton}}</td>
+                                            <td>{{part.noofcarton}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="text-center mt-2 mb-2 notFound" data-ng-if="norRsultFound !== ''">
+                                <h4 class="text-danger fs-6">{{norRsultFound}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="customer_warehouse_release_view" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="card-header header-part-no">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="card-title text-uppercase mb-0">Part Number - {{partno}}</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="card-title text-uppercase mb-0">Size - {{size}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-content border-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 pt-3">
+                                    <div class="card-body modal_tbl">
+                                        <h6 class="text-primary">Warehouse Stock as on {{date | date:'dd MMM yyyy'}}</h6>
+                                        <table class="table text-center mb-0">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Invoice</th>
+                                                    <th>Pallet No.</th>
+                                                    <th>In Quantity</th>
+                                                    <th>Release Number</th>
+                                                    <th>Rel. Date</th>
+                                                    <th>Out Quantity</th>
+                                                    <th>Balance Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody data-ng-repeat="item in CustomerReleaseView.items">
+                                                <tr>
+                                                    
+                                                    <td style="border: none; background-color: #f2f2ff;">{{ item.date | date:'dd MMM yyyy' }}</td>
+                                                    <td style="border: none; background-color: #f2f2ff;">{{ item.invoiceNo }}</td>
+                                                    <td style="border: none; background-color: #f2f2ff;">{{ item.prefix }} / {{ item.startNo }}</td>
+                                                    <td style="border: none; background-color: #f2f2ff;">
+                                                        <span data-ng-if="item.noOfPallet==1">
+                                                            {{ item.qty }}
+                                                        </span>
+
+                                                        <span data-ng-if="item.noOfPallet==0">
+                                                            {{ item.recCartonQty }} ({{ item.noOfCarton }} cartons)
+                                                        </span>
+                                                    </td>
+                                                    <td style=" background-color: #f2f2ff;">{{ item.releaseDetails[0].releaseNo }}</td>
+                                                    <td style=" background-color: #f2f2ff;">{{ item.releaseDetails[0].releaseDate | date:'dd MMM yyyy' }}</td>
+                                                    <td style=" background-color: #f2f2ff;">
+
+                                                        <span data-ng-if="item.releaseDetails.length === 0">
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                0
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ item.recCartonQty }} ({{ item.noOfCarton }} cartons)
+                                                            </span>
+                                                        </span>
+
+
+                                                        <span data-ng-if="item.releaseDetails.length > 0">
+                                                            
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                {{ item.qty }}
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ item.releaseDetails[0].outQuantity }} ({{ item.releaseDetails[0].outCartons }} cartons)
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                    <td style="border: none; background-color: #f2f2ff;">
+                                                        
+                                                            <span data-ng-if="item.releaseDetails.length === 0">
+                                                                    <span data-ng-if="item.noOfPallet>0">
+                                                                        {{item.qty - item.outQty}}
+                                                                    </span>
+            
+                                                                    <span data-ng-if="item.noOfPallet==0">
+                                                                        {{item.recCartonQty - item.outQty}} ({{item.noOfCarton - item.outCartonQty }} Carton)
+                                                                    </span>
+                                                            </span>
+    
+                                                            <span data-ng-if="item.releaseDetails.length > 0">
+                                                                <span data-ng-if="item.releaseDetails.length===1">
+                                                                        <span data-ng-if="item.noOfPallet>0">
+                                                                            {{ item.qty -  item.outQty}}
+                                                                        </span>
+                
+                                                                        <span data-ng-if="item.noOfPallet==0">
+                                                                            {{ item.recCartonQty - item.outQty }} ({{ item.noOfCarton - item.outCartonQty }} cartons)
+                                                                        </span>
+                                                                </span>
+                                                            </span>
+                                                        
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                <tr data-ng-repeat="release in item.releaseDetails.slice(1)">
+                                                    <td colspan="4" style="border: none !important;"></td>
+                                                    <td style="border: none;">{{release.releaseNo}}</td>
+                                                    <td style="border: none;">{{ release.releaseDate | date:'dd MMM yyyy' }}</td>
+                                                    <td style="border: none;">
+                                                        <span data-ng-if="item.releaseDetails.length === 0">
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                {{ release.qty }}
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ release.recCartonQty }} ({{ release.noOfCarton }} cartons)
+                                                            </span>
+                                                        </span>
+
+
+                                                        <span data-ng-if="item.releaseDetails.length > 0">      
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                {{ release.qty }}
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ release.outQuantity }} ({{ release.outCartons }} cartons)
+                                                            </span>
+                                                        </span>
+                                                    </td>
+
+                                                    <td style="border: none;" data-ng-if="$last">
+                                                        <span data-ng-if="item.releaseDetails.length === 0">
+                                                            <span data-ng-if="release.releaseNo===''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    {{ item.qty }}
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{ item.recCartonRty }} ({{ item.noOfCarton }} cartons)
+                                                                </span>
+                                                            </span>
+
+                                                            <span data-ng-if="release.releaseNo!==''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    0
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{item.recCartonQty - item.outQty}} ({{item.noOfCarton - item.outCartonQty }} Carton)
+                                                                </span>
+                                                            </span>
+                                                        </span>
+
+                                                        <span data-ng-if="item.releaseDetails.length !== 0">
+                                                            <span data-ng-if="release.releaseNo===''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    {{ item.qty -  release.palletQty}}
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{ item.recCartonQty - release.outQuantity }} ({{ item.noOfCarton - release.outCartons }} cartons)
+                                                                </span>
+                                                            </span>
+
+                                                            <span data-ng-if="release.releaseNo!==''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    {{ item.qty -  release.palletQty}}
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{ item.recCartonQty - item.outQty }} ({{ item.noOfCarton - item.outCartonQty }} cartons)
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                
+                                            </tbody>
+
+                                        </table>
+
+                                        <div class="stock-dets" >
+                                            <h3>Total Quantity In Stock - <span class="fw-bold ms-2">{{CustomerReleaseView.outPalletQty}}</span></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid mt-2 mb-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 modal_tbl">
+                                    
+                                    <div class="card-body transit">
+                                        <h6 class="text-primary">Transit Stock as on {{date | date:'dd MMM yyyy'}}</h6>
+                                        <table class="table text-center mb-0">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Invoice</th>
+                                                    <th>Pallet No.</th>
+                                                    <th>In Quantity</th>
+                                                    <th>BL Number</th>
+                                                    <th>BL Date</th>
+                                                    <th>ETA</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-ng-repeat="transit in CustomerReleaseView.transit">
+                                                    <td style="background-color: #f2f2ff;">{{transit.inV_NO}}</td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.prefix}} / {{transit.startno}}</td>
+                                                    <td style="background-color: #f2f2ff;">
+                                                        <span data-ng-if="transit.noofpallet===1">{{transit.qty}}</span>
+                                                        <span data-ng-if="transit.noofpallet===0">{{transit.qty}} ({{transit.noofcont}} cartons)</span>
+                                                    </td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.bL_NO}}</td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.bl_date | date:'dd MMM yyyy'}}</td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.date | date:'dd MMM yyyy'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="stock-dets" >
+                                            <h3>Total Quantity In Transit - <span class="fw-bold ms-2">{{ getTransitQtySum() }}</span></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+        // Initialize select2
+        $("#warehouse").select2();
+    });
+    </script>
+   

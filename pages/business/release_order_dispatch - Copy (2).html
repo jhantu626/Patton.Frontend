@@ -1,0 +1,205 @@
+<main>
+<div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="isBodyLoading">
+    <div class="ldio-4j5ay0xf86g">
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+</div>
+
+<div ng-if="isLoading" class="loader ploader my-loader pb-4 ordLoader">
+    <div class="dot dot-1"></div>
+    <div class="dot dot-2"></div>
+    <div class="dot dot-3"></div>
+    <div class="dot dot-4"></div>
+    <div class="dot dot-5"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between p-3 py-2 heading-sticky">
+                    <h5 class="card-title text-uppercase mb-0">Release Dispatch</h5>
+                </div>
+
+                <div class="card-body workRelease">
+                    <div class="search-pannel rounded mb-4 pt-3 pb-4">
+                        <div class="row justify-content-center searching-area">
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                  <span>Customer Name</span>
+                                  <select class="w-100" name="search_customer" id="search_customer" ng-model="model.partyCode" ng-change="getFdestination(model.partyCode)">
+                                    <option value="">Select Customer</option>
+                                    <option ng-repeat="option in datalookup" value="{{option.code}}">
+                                      {{option.code}} ({{option.name}})
+                                    </option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                  <span>Warehouse Name</span>
+                                  <select class="w-100" name="search_warehouse" id="search_warehouse">
+                                    <option value="">Select Warehouse</option>
+                                    <option ng-repeat="destination in FdestinationList" value="{{destination.warehouseName}}">
+                                      {{destination.warehouseName}}
+                                    </option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                  <span>Release Number</span>
+                                  <input type="text" name="txt_release_no" id="txt_release_no" class="w-100">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>Ship to Party</span>
+                                    <select class="w-100" name="search_ship_to_party" id="search_ship_to_party">
+                                    <option value="">Select Ship to Party</option>
+                                    <option ng-repeat="option in ConsigneeCodeList" value="{{option.name}}">
+                                    {{option.name}} ({{option.consigneeName}})
+                                    </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-auto">
+                            <div class="form-group">
+                                <span>From Date</span>
+                                <input type="text" name="txt_search_order_from_date" id="txt_search_from_date" class="">
+                            </div>
+                            </div>
+
+                            <div class="col-md-auto">
+                                <div class="form-group">
+                                    <span>To Date</span>
+                                    <input type="text" name="txt_search_order_to_date" id="txt_search_to_date" class="">
+                                </div>
+                            </div>
+                              
+                            <div class="col-auto">
+                                <a href="javascript:void(0);" class="btn_search py-1 d-inline-block mt-4" style="margin-bottom: 3px;" ng-click="getDispatchList()">SEARCH</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body" id="warehouse_release" ng-if="Orderdispatchlist.length>0">
+                    <div ng-if="Orderdispatchlist.length>0">
+                    <table class="table text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Order No.</th>
+                                <th>Part No.</th>
+                                <th>Item<br><span class="text-primary">Size</span></th>
+                                <th>
+                                    No of Carton / Carton Qty<br>
+                                    <span class="text-primary">No of Pallet / No of Qty</span>
+                                </th>
+                                <th>Prefix / Start No</th>
+                                <th>Quantity</th>
+                                <th>Req. Quantity</th>
+                                <th>Balance Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="dispatch in Orderdispatchlist">
+                            <tr>
+                                <td colspan="9" class="text-start table-warning"><b>Release No : {{dispatch.itemNumber}} | Release Date : {{dispatch.date | date:'dd-MM-y' : 'UTC'}} | Ship to Party : {{dispatch.consignee.code}}</b></td>
+                            </tr>
+                            <tr ng-repeat="item in dispatch.items">
+                                <td>
+                                    <label class="check-container">
+                                        <input type="checkbox" class="checkBoxClass{{$parent.$index+1}}" 
+                                               id="chkbor{{$parent.$index+1}}{{$index+1}}" 
+                                               ng-model="item.selected" 
+                                               ng-change="updateSelectedItems(item, dispatch)">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </td>
+                                <td>{{item.invoiceNumber}}</td>
+                                <td>{{item.partNo}}</td>
+                                <td>{{item.item}}<br><span class="text-primary">{{item.size}}</span></td>
+                                <td>
+                                    <span ng-if="item.cartons>0">{{item.cartons}} / {{item.cartonQuantity}}</span>
+                                    <span class="text-primary fw-semibold" ng-if="item.pallets>0">
+                                        {{item.pallets}} / {{item.quantity}}
+                                    </span>
+                                </td>
+                                <td class="text-primary fw-semibold">{{item.prefix}} / {{item.startno}}</td>
+                                <td>
+                                    <span ng-if="item.cartons>0">{{item.cartonQuantity}}</span>
+                                    <span ng-if="item.pallets>0">{{item.quantity}}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control shadow-none w-100 req-qty" 
+                                           ng-model="item.reqQuantity" value="100">
+                                </td>
+                                <td colspan="2">100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="text-center mt-2 mb-2 notFound" data-ng-if="norRsultFound !== ''">
+                        <h4 class="text-danger fs-6">{{norRsultFound}}</h4>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+</main>
+
+<script>
+    $(function () 
+    {
+      $("#txt_search_from_date").datepicker({
+        changeMonth: true,
+        changeYear: true
+      });
+    
+      $("#txt_search_to_date").datepicker({
+        changeMonth: true,
+        changeYear: true
+      });
+    
+    });
+    
+      $(document).ready(function () 
+      {
+        $("#search_customer").select2();
+        $("#search_warehouse").select2();
+        $("#search_ship_to_party").select2();
+
+        $("#ckbCheckAll").click(function () 
+        {
+            $(".checkBoxClass").attr('checked', this.checked);
+        });
+
+        $("#ckbCheckAll2").click(function () 
+        {
+            $(".checkBoxClass2").attr('checked', this.checked);
+        });
+    
+        // $('#release_order_edit').on('shown.bs.modal', function () 
+        // {
+        //     $('#txt_order_customer').select2({
+        //         dropdownParent: $('#release_order_edit')  // Attach the dropdown to the modal
+        //     });
+    
+        //     $('#txt_order_ship_to_party').select2({
+        //         dropdownParent: $('#release_order_edit')  // Attach the dropdown to the modal
+        //     });
+        // });    
+    });
+</script>

@@ -1,0 +1,1051 @@
+<style>
+    .modal-body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .modal-body th,
+    .modal-body td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+        font-size: 10px;
+    }
+</style>
+<!-- Main -->
+<main>
+    <div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="list && isBodyLoading">
+        <div class="ldio-4j5ay0xf86g">
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">WAREHOUSE RELEASE DATA</h5>
+                    </div>
+                    <form action="" class="card-body workRelease">
+                        <div class="p-3 bg-gray2 rounded mb-4">
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="radioOption d-flex align-items-center mb-3">
+                                        <label>
+                                            <input type="radio" name="type" data-ng-model="model.type" value="NORMAL"
+                                                ng-checked="true" data-ng-checked="model.type === 'NORMAL'"> Normal
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="type" data-ng-model="model.type"
+                                                value="REJECTION" data-ng-checked="model.type === 'REJECTION'"> Rejection
+                                        </label>
+
+                                        <div class="bg-gray4 px-2 py-1 rounded">
+                                            <label>
+                                                <input type="radio" name="source" data-ng-model="model.source"
+                                                    value="PIL" data-ng-change="onRadioChanges()" data-ng-checked="model.source === 'PIL'"> From PIL
+                                            </label>
+                                            <label class="m-0">
+                                                <input type="radio" name="source" data-ng-model="model.source"
+                                                    value="PII" ng-checked="true" data-ng-change="onRadioChanges()"  data-ng-checked="model.source === 'PII'">
+                                                From PII
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="radioOption d-flex align-items-center">
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="RELEASE" data-ng-checked="model.action === 'RELEASE'"
+                                                data-ng-change="ActionReset()"> Release
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="TRANSFER" data-ng-checked="model.action === 'TRANSFER'"
+                                                data-ng-change="ActionReset()">
+                                            Transfer
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="STOCKIN" data-ng-checked="model.action === 'STOCKIN'"
+                                                data-ng-change="ActionReset()">
+                                            Stock In
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action" value="BREAK"
+                                                data-ng-checked="model.action === 'BREAK'"
+                                                data-ng-change="ActionReset()">
+                                            Break
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="action" data-ng-model="model.action" value="DISPATCH"
+                                                data-ng-checked="model.action === 'DISPATCH'"
+                                                data-ng-change="ActionReset()">
+                                            Dispatch
+                                        </label>
+
+                                        <!-- <label>
+                                            <input type="radio" name="action" data-ng-model="model.action"
+                                                value="STOCKADJLESS" data-ng-checked="model.action === 'STOCKADJLESS'"
+                                                data-ng-change="ActionReset()"> Stock Adj-Less
+                                        </label> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-6 searching-area">
+                                    <div class="row align-items-center">
+                                        <div class="col-10">
+                                            <div class="row g-2">
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <span class="text-start">{{ labelpartyCode }} Code</span>
+                                                        <select class="w-100" name="partyCode"
+                                                            ng-model="model.partyCode" id="partyCode" ng-change="getFdestination(model.partyCode)">
+                                                            <option value="">Select {{ labelpartyCode }}</option>
+                                                            <option ng-repeat="option in datalookup"
+                                                                value="{{option.code}}">
+                                                                {{option.code}} ({{option.name}})
+                                                            </option>
+                                                        </select>
+                                                        <!-- <div id="result"></div> -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <span class="text-start">{{ labelitemNumber }} Number</span>
+                                                        <input class="w-100" type="text" name="itemNumber"
+                                                            ng-model="model.itemNumber"
+                                                            ng-readonly="isReadonly"
+                                                            style="text-transform: uppercase;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <span class="text-start">{{ labelitemDate }} Date</span>
+                                                        <!-- <input type="date" name="itemDate" ng-model="model.itemDate"
+                                                value="{{ warehouseRelease.itemDate | date:'y-MM-dd' : 'UTC' }}"> -->
+                                                        <input class="w-100" type="text" class="form-control"
+                                                            name="itemDate" ng-model="model.itemDate"
+                                                            value="{{ warehouseRelease.itemDate}}" id="datepicker"
+                                                            readonly placeholder="dd-mm-yyyy" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <span class="text-start">Consignee Code</span>
+                                                        <select class="w-100" name="consigneeCode"
+                                                            ng-model="model.consigneeCode" id="consigneeCode">
+                                                            <option value="">Select Consignee Code</option>
+                                                            <option ng-repeat="option in ConsigneeCodeList"
+                                                                value="{{option.name}}">
+                                                                {{option.name}} ({{option.consigneeName}})
+                                                            </option>
+                                                        </select>
+                                                        <!-- <input type="text" name="consigneeCode" data-ng-model="model.consigneeCode" style="width: 120px;  text-transform: uppercase;" value="{{warehouseRelease.consigneeCode}}"> -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <span class="text-start">{{ labelbuyerCode }} Code</span>
+                                                        <select class="w-100" name="buyerCode"
+                                                            ng-model="model.buyerCode" id="buyerCode" ng-change="getPonoForTransfer(model.buyerCode)">
+                                                            <option value="">Select {{ labelbuyerCode }} Code</option>
+                                                            <option ng-repeat="option in datalookup"
+                                                                value="{{option.code}}"
+                                                                ng-selected={{option.code}} === {{warehouseRelease.buyerCode}}>
+                                                                {{option.code}} ({{option.name}})
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <span class="text-start">FDestination</span>
+                                                        <!-- <select name="" id="">
+                                                        <option value=""></option>
+                                                            <option value="JOHONASBORO">JOHONASBORO</option>
+                                                        </select> -->
+                                                        <select class="w-100" name="cfDestimation"
+                                                            ng-model="model.cfDestimation" id="cfDestimation">
+                                                            <option value="">Select FDestination</option>
+                                                            <option ng-repeat="option in FdestinationList"
+                                                                value="{{option.warehouseName}}"
+                                                                ng-selected={{option.warehouseName}} === {{warehouseRelease.cfDestimation}}>
+                                                                {{option.warehouseName}} ({{option.warehouseCode}})
+                                                            </option>
+                                                        </select>
+
+                                                        <!-- <input class="w-100 my-textbox" type="text" name="cfDestimation" data-ng-model="model.cfDestimation" style="text-transform: uppercase;" value="{{warehouseRelease.cfDestimation}}" ng-keyup="f_destination_display_block()"> -->
+                                                        <!-- <div class="fDestination" id="f_destination" style="display: none;">
+                                                            <ul>
+                                                                <li data-ng-repeat="destination in FdestinationList" ng-click="get_fdestination(destination)">{{destination}}</li>
+                                                            </ul>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="d-flex flex-column align-items-end">
+                                                <a href="javascript:void(0)" ng-show="add" class="mx-1 mt-3 mb-1 btn_add w-100 text-center"
+                                                    ng-click="CheckValidate()" id="new_add_others">NEW ADD</a>
+                                                <a href="javascript:void(0)" ng-show="add" class="mx-1 mt-3 mb-1 btn_add w-100 text-center" style="display: none;" ng-click="CheckValidateStockin()" id="new_add_stockin">NEW ADD</a>
+                                                <a href="javascript:void(0)" ng-click="reset()"
+                                                    class="mx-1 mt-1 mb-1 btn_clear w-100 text-center">CLEAR</a>
+                                                <a href="javascript:void(0)" ng-click="DataSearch()"
+                                                    class="mx-1 mt-1 btn_search w-100 text-center">SEARCH</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: none;" id="loader">
+                            <div class="loader">
+                                <div class="dot dot-1"></div>
+                                <div class="dot dot-2"></div>
+                                <div class="dot dot-3"></div>
+                                <div class="dot dot-4"></div>
+                                <div class="dot dot-5"></div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3 mb-3 notFound" data-ng-if="norRsultFound">
+                            <h3 class="text-danger fs-6">{{norRsultFound}}</h3>
+                        </div>
+
+                        <div data-ng-if="warehouseRelease.items && warehouseRelease.items.length > 0">
+
+                            <table class="table table-bordered">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Part No.</th>
+                                        <th>
+                                            Item<br>
+                                            <span class="text-primary">Size</span>
+                                        </th>
+                                        <th>
+                                            PO Number<br>
+                                            <span class="text-primary">Invoice No</span>
+                                        </th>
+                                        <th>
+                                            No of Carton / Carton QTY <br>
+                                            <span class="text-primary">No of Pallet / Pallet QTY</span>
+                                        </th>
+                                        <th>Prefix / Start No</th>
+                                        <th>F Destination</th>
+                                        <th>REF Buyer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="item in warehouseRelease.items track by $index"
+                                        data-ng-if="warehouseRelease.items">
+                                        <td class="text-center">
+                                            <i class="bi bi-trash-fill text-danger me-2" ng-show="delete" ng-click="release_items_row_delete($index)"></i>
+                                        </td>
+                                        <td>{{item.partNo}}</td>
+                                        <td>
+                                            <span ng-if="item.item !== undefined && item.item !== null && item.item.trim() !== ''">
+                                                {{item.item}}
+                                            </span>
+                                            <span ng-if="item.size !== undefined && item.size !== null && item.size.trim() !== ''" class="text-primary d-block">{{item.size}}</span>
+                                        </td>
+                                        <td>
+                                            <span ng-if="model.action === 'RELEASE'">
+                                                <select class="w-100" ng-model="item.poNumber" id="ponumber" ng-change="updatePoInvoiceNumber(1,1,item.poNumber,$index)">
+                                                    <option value="selected">Select PO Number</option>
+                                                    <option ng-repeat="po in uniquePoNoList"
+                                                        value="{{po.orderNo}}" ng-selected={{po.orderNo}} === {{item.poNumber}}>
+                                                        {{po.orderNo}}
+                                                    </option>
+                                                </select>
+
+                                                <!-- <select>
+                                                    <option data-ng-repeat="po in uniquePoNoList" value=""></option>
+                                                </select>
+                                                <input type="text" class="edit_txt_po_no" value="{{item.poNumber}}"
+                                                ng-model="item.poNumber" ng-blur="updatePoInvoiceNumber(1,1,item.poNumber,$index)"> -->
+                                            </span>
+
+                                            <span ng-if="item.poNumber !== undefined && item.poNumber !== null && item.poNumber.trim() !== '' && model.action !== 'RELEASE'">
+                                                {{item.poNumber}}
+                                            </span>
+                                            <span ng-if="item.invoiceNumber !== undefined && item.invoiceNumber !== null && item.invoiceNumber.trim() !== ''" class="text-primary d-block">
+                                                {{item.invoiceNumber}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span ng-if="item.pallets == 0 || item.pallets === null">
+                                                {{item.cartons}} / {{item.cartonQuantity}}
+                                            </span>
+                                            
+                                            <span ng-if="item.pallets > 0">
+                                                <span class="text-primary d-block">
+                                                    {{item.pallets}} / {{item.quantity}}
+                                                </span>
+                                            </span>                                            
+                                        </td>
+                                        <td>{{item.prefix}} / {{item.startno}}</td>
+                                        <td>
+                                            <span data-ng-if="item.finalDestination">{{item.finalDestination}}</span>
+                                            <span data-ng-if="!item.finalDestination">JONESBORO,AR,JBS,WAREHOUSE</span>
+                                        </td>
+                                        <td>{{item.refBuyer}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- <a href="javascript:void(0);" ng-click="print()"
+                                class="btn btn-sm btn-dark mx-1">PRINT</a> -->
+                    </form>
+                </div>
+
+                <div class="card mt-3 px-3" data-ng-if="warehouseRelease.transfers && warehouseRelease.transfers.length > 0">
+                    <div data-ng-if="warehouseRelease.transfers">
+                        <div class="pt-3">
+                            <div class="radioOption d-flex align-items-center justify-content-center">
+                                <label>
+                                    <input type="checkbox" value="1" name="w2w" data-ng-model="model.w2w"> Warehouse 2 Warehouse Transfer
+                                </label>
+                                <div class="bg-gray4 px-2 pt-1 rounded">
+                                    <label>
+                                        <input type="radio" name="pil_pii" data-ng-model="model.pil_pii" value="PIL"> From PIL
+                                    </label>
+                                    <label class="m-0">
+                                        <input type="radio" name="pil_pii" data-ng-model="model.pil_pii" value="PII" ng-checked="true" data-ng-checked="model.pil_pii === 'PII'"> From PII
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Part No.</th>
+                                    <th>
+                                        Item<br>
+                                        <span class="text-primary">Size</span>
+                                    </th>
+                                    <th>
+                                        PO Number<br>
+                                        <span class="text-primary">Invoice No</span>
+                                    </th>
+                                    <th>
+                                        No of Carton / Carton QTY <br>
+                                        <span class="text-primary">No of Pallet / Pallet QTY</span>
+                                    </th>
+                                    <th>Prefix / Start No</th>
+                                    <th>F Destination</th>
+                                    <th>REF Buyer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="transfers in warehouseRelease.transfers track by $index"
+                                    data-ng-if="warehouseRelease.transfers">
+                                    <td class="text-center">
+                                        <i class="bi bi-trash-fill text-danger me-2" ng-show="delete"  ng-click="release_transfers_row_delete($index)"></i>
+                                    </td>
+                                    <td>
+                                        <select class="w-100" name="partNofortrans"
+                                        ng-model="transfers.partNo" data-ng-change="updateItem(2,partno,transfers.partNo,$index)">
+                                        <option value="">Select Part No</option>
+                                        <option ng-repeat="option in partnolistfortrans"
+                                        value="{{option.code}}"
+                                        ng-selected={{transfers.partNo}} === {{option.code}}>
+                                        {{option.code}}
+                                        </option>
+                                        </select>
+
+                                        <!-- <input type="text" class="edit_part_no" value="{{transfers.partNo}}"
+                                            ng-model="transfers.partNo"
+                                            ng-blur="updateItem(2,partno,transfers.partNo,$index)"> -->
+                                    </td>
+                                    <td>
+                                        {{transfers.item}}
+                                        <span ng-if="transfers.item!='' && transfers.size!=''"><br></span>
+                                        <span class="text-primary d-block">{{transfers.size}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="transfers.poNumber !== undefined && transfers.poNumber !== null && transfers.poNumber.trim() !== ''">
+                                            {{transfers.poNumber}}
+                                        </span>
+                                        <span ng-if="transfers.invoiceNumber !== undefined && transfers.invoiceNumber !== null && transfers.invoiceNumber.trim() !== ''" class="text-primary d-block">
+                                            {{transfers.invoiceNumber}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="transfers.pallets == 0 || transfers.pallets === null">
+                                            {{transfers.cartons}} / {{transfers.cartonQuantity}}
+                                        </span>
+                                        
+                                        <span ng-if="transfers.pallets > 0">
+                                            <span class="text-primary d-block">
+                                                {{transfers.pallets}} / {{transfers.quantity}}
+                                            </span>
+                                        </span>  
+                                    </td>
+                                    <td>{{transfers.prefix}} / {{transfers.startno}}</td>
+                                    <td>{{transfers.finalDeatination}}</td>
+                                    <td>{{transfers.refBuyer}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card mt-3" data-ng-if="warehouseRelease.breaks && warehouseRelease.breaks.length > 0">
+                    <div class="card-body workRelease">
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Part No.</th>
+                                    <th>
+                                        Item<br>
+                                        <span class="text-primary">Size</span>
+                                    </th>
+                                    <th>
+                                        PO Number<br>
+                                        <span class="text-primary">Invoice No</span>
+                                    </th>
+                                    <th>
+                                        No of Carton / Carton QTY <br>
+                                        <span class="text-primary">No of Pallet / Pallet QTY</span>
+                                    </th>
+                                    <th>Prefix / Start No</th>
+                                    <th>F Destination</th>
+                                    <th>REF Buyer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="breaks in warehouseRelease.breaks track by $index"
+                                    data-ng-if="warehouseRelease.breaks" data-ng-class="breaks.class">
+                                    <td class="text-center">
+                                        <i data-ng-if="warehouseRelease.breaks.length > 1  && delete" class="bi bi-trash-fill text-danger me-2"
+                                            ng-click="row_delete(3,$index)"></i>
+                                        <i class="ri-file-copy-line text-success" ng-click="row_copy(3,$index)"></i>
+                                        <!-- {{$index + 1}}<input type="checkbox"> -->
+                                        <!-- {{$index}} -->
+                                    </td>
+                                    <td>{{breaks.partNo}}</td>
+                                    <td>
+                                        {{breaks.item}}
+                                        <span ng-if="breaks.item!='' && breaks.size!=''"><br></span>
+                                        <span class="text-primary d-block">{{breaks.size}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="breaks.poNumber === '' || breaks.poNumber === null">
+                                            {{breaks.poNumber}}
+                                        </span>
+                                        
+                                        <span ng-if="breaks.invoiceNumber !== '' && breaks.invoiceNumber !== null">
+                                            <span class="text-primary d-block">
+                                                {{breaks.invoiceNumber}}
+                                            </span>
+                                        </span> 
+                                    </td>
+                                    <td>
+                                        <!-- <span ng-if="breaks.cartons>0 && breaks.cartons!=null && breaks.cartonQuantity>0 && breaks.cartonQuantity!=null">
+                                        {{breaks.cartons}} / {{breaks.cartonQuantity}}
+                                    </span>
+
+                                    <span ng-if="breaks.pallets>0 || breaks.pallets==null && breaks.quantity>0 || breaks.quantity!=null">
+                                        <span class="text-primary d-block">{{breaks.pallets}} / {{breaks.quantity}}</span>
+                                    </span> -->
+
+
+                                        <input type="text" class="edit_txt_box" value="{{breaks.cartons}}"
+                                            ng-model="breaks.cartons"
+                                            ng-blur="updateItem(1,brk_cartons,breaks.cartons,$index)"> /
+
+                                        <input type="text" class="edit_txt_box" value="{{breaks.cartonQuantity}}"
+                                            ng-model="breaks.cartonQuantity"
+                                            ng-blur="updateItem(1,brk_cartonQuantity,breaks.cartonQuantity,$index)">
+                                        <br><br>
+
+                                        <input type="text" class="edit_txt_box" value="{{breaks.pallets}}"
+                                            ng-model="breaks.pallets"
+                                            ng-blur="updateItem(1,brk_pallets,breaks.pallets,$index)"> /
+
+                                        <input type="text" class="edit_txt_box" value="{{breaks.quantity}}"
+                                            ng-model="breaks.quantity"
+                                            ng-blur="updateItem(1,brk_quantity,breaks.quantity,$index)">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="edit_txt_box" value="{{breaks.prefix}}"
+                                            ng-model="breaks.prefix"
+                                            ng-blur="updateItem(1,brk_prefix,breaks.prefix,$index)"> /
+
+                                        <input type="text" class="edit_txt_box" value="{{breaks.startno}}"
+                                            ng-model="breaks.startno"
+                                            ng-blur="updateItem(1,brk_startno,breaks.startno,$index)">
+                                    </td>
+                                    <td>{{breaks.finalDeatination}}</td>
+                                    <td>{{breaks.refBuyer}}</td>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="card mt-3 mb-4" data-ng-if="warehouseRelease.items && warehouseRelease.items.length > 0">
+                    <div class="card-body">
+                        <div class="justify-content-center d-flex">
+                            <a href="#" class="btn btn-sm btn-dark mx-1">BACK</a>
+                            <a href="javascript:void(0);" ng-show="add" ng-click="FinalSave(mode)"
+                                class="btn btn-sm btn-dark mx-1">SAVE</a>
+                            <a href="javascript:void(0);" ng-click="print()"
+                                class="btn btn-sm btn-dark mx-1">PRINT</a>
+
+                            <a href="javascript:void(0);" ng-click="CheckValidate()"
+                                class="btn btn-sm btn-dark mx-1" id="new_add_others1" ng-show="btncheck !== 'STOCKIN' && add">NEW ADD</a>
+                            <a href="javascript:void(0);" ng-click="CheckValidateStockin()"
+                                class="btn btn-sm btn-dark mx-1" id="new_add_stockin1" ng-show="btncheck === 'STOCKIN' && add">NEW ADD</a>
+
+                            <a href="javascript:void(0);" ng-click="reset()"
+                                class="btn btn-sm btn-warning mx-1">CLEAR</a>
+                            <a href="javascript:void(0);" ng-show="delete" ng-click="DeleteRecord()"
+                                class="btn btn-sm btn-danger mx-1">DELETE</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Release (Modal) -->
+<div class="modal fade" id="addrelease" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ labelAddabel }} Data Entry</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-4">
+                    <form action="">
+                        <div class="row gx-4 gy-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>PART NO.</span>
+                                    <select class="w-100" name="partNo" id="partNo" data-ng-model="model.partNo" ng-change="DataGetForSave(); getPartNoData(getSelectedPartNo(model.partNo))">
+                                        <option value="">Select Part No</option>
+                                        <option ng-repeat="part_no in partnolist"
+                                            value="{{part_no.code}}">{{part_no.code}}
+                                        </option>
+                                    </select>
+                                    <!-- <input type="text" name="partNo" class="w-100" style="text-transform: uppercase;"
+                                        data-ng-model="model.partNo" ng-blur="DataGetForSave()"> -->
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>AVERAGE QTY</span>
+                                    <input type="text" name="avgQty" class="w-100" data-ng-model="model.avgQty"
+                                        ng-blur="DataGetForSave()">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <span>ITEM</span>
+                                    <input type="text" class="w-100 readonly" name="Item" id="PartNoItemName" data-ng-model="model.Item" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span>SIZE</span>
+                                    <input type="text" class="w-100 readonly" name="Size" id="PartNoItemSize" data-ng-model="model.Size" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span>PO NUMBER</span>
+                                    <input type="text" class="w-100" name="PoNumber" id=""
+                                        data-ng-model="model.PoNumber">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span>INVOICE NO.</span>
+                                    <input type="text" class="w-100" name="InvoiceNumber" id=""
+                                        data-ng-model="model.InvoiceNumber">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>NO OF CARTON</span>
+                                    <input type="text" class="w-100" name="NoofCartton" id=""
+                                        data-ng-model="model.NoofCartton">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>CARTON QTY</span>
+                                    <input type="text" class="w-100" name="CartonQty" id=""
+                                        data-ng-model="model.CartonQty">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>NO OF PALLET</span>
+                                    <input type="text" class="w-100" name="NoofPallet" id=""
+                                        data-ng-model="model.NoofPallet">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>PALLET QTY</span>
+                                    <input type="text" class="w-100" name="PalletQty" id=""
+                                        data-ng-model="model.PalletQty">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>PREFIX</span>
+                                    <input type="text" class="w-100" name="Prefix" id="" data-ng-model="model.Prefix">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>START NO</span>
+                                    <input type="text" name="" id="" class="w-100">
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-6">
+                                <div class="form-group">
+                                    <span>F DESTINATION</span>
+                                    <select name="" id="" data-ng-model="model.FDestination" class="w-100">
+                                        <option value="JOHONASBORO" selected>JOHONASBORO</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- <hr>
+                        <div class="col-12 text-center">
+                            <a href="javascript:void(0)" ng-click="ClearAll()"
+                                class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                            <span data-ng-if="warehouseReleaseSaveData.items">
+                                <a href="javascript:void(0)" ng-click="SaveValidate()"
+                                    class="btn btn-sm btn-dark mx-1">ADD</a>
+                            </span>
+
+                            <span data-ng-if="!warehouseReleaseSaveData.items">
+                                <a href="javascript:void(0)" class="btn btn-sm btn-dark mx-1"
+                                    style="opacity: 0.5;">ADD</a>
+                            </span>
+                        </div> -->
+                    </form>
+                </div>
+
+                <div class="text-center mt-3 mb-3 notFound" data-ng-if="ReleaseSaveDataMessage">
+                    <h3 class="text-danger fs-6">{{ReleaseSaveDataMessage}}</h3>
+                </div>
+
+                <div ng-if="ReleaseSaveDataloader" class="mt-5">
+                    <div class="loader">
+                        <div class="dot dot-1"></div>
+                        <div class="dot dot-2"></div>
+                        <div class="dot dot-3"></div>
+                        <div class="dot dot-4"></div>
+                        <div class="dot dot-5"></div>
+                    </div>
+                </div>
+
+                <div class="mt-3 px-3" data-ng-if="warehouseReleaseSaveData.items">
+                    <div class="card-body workRelease">
+                        <table class="table table-bordered">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Part No.</th>
+                                    <th>
+                                        Item<br>
+                                        <span class="text-primary">Size</span>
+                                    </th>
+                                    <th>
+                                        PO Number<br>
+                                        <span class="text-primary">Invoice No</span>
+                                    </th>
+                                    <th>
+                                        No of Carton / Carton QTY <br>
+                                        <span class="text-primary">No of Pallet / Pallet QTY</span>
+                                    </th>
+                                    <th>Prefix / Start No</th>
+                                    <th>F Destination</th>
+                                    <th>REF Buyer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="SaveDataitem in warehouseReleaseSaveData.items"
+                                    data-ng-if="warehouseReleaseSaveData.items">
+                                    <td>{{SaveDataitem.partNo}}</td>
+                                    <td>
+                                        <span ng-if="SaveDataitem.item !== undefined && SaveDataitem.item !== null && SaveDataitem.item.trim() !== ''">{{SaveDataitem.item}}</span>
+                                        
+                                        <span ng-if="SaveDataitem.size !== undefined && SaveDataitem.size !== null && SaveDataitem.size.trim() !== ''" class="text-primary d-block">{{SaveDataitem.size}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="SaveDataitem.poNumber !== undefined && SaveDataitem.poNumber !== null && SaveDataitem.poNumber.trim() !== ''">{{SaveDataitem.poNumber}}</span>
+
+                                        <span ng-if="SaveDataitem.invoiceNumber !== undefined && SaveDataitem.invoiceNumber !== null && SaveDataitem.invoiceNumber.trim() !== ''" class="text-primary d-block">{{SaveDataitem.invoiceNumber}}</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            ng-if="SaveDataitem.cartons>0 && SaveDataitem.cartons!=null && SaveDataitem.cartonQuantity>0 && SaveDataitem.cartonQuantity!=null">
+                                            {{SaveDataitem.cartons}} / {{SaveDataitem.cartonQuantity}}
+                                        </span>
+
+                                        <span
+                                            ng-if="SaveDataitem.pallets>0 || SaveDataitem.pallets==null && SaveDataitem.quantity>0 || SaveDataitem.quantity!=null">
+                                            <span class="text-primary d-block">{{SaveDataitem.pallets}} /
+                                                {{SaveDataitem.quantity}}</span>
+                                        </span>
+                                    </td>
+                                    <td>{{SaveDataitem.prefix}} / {{SaveDataitem.startno}}</td>
+                                    <td>{{SaveDataitem.finalDeatination}}</td>
+                                    <td>{{SaveDataitem.refBuyer}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <a href="javascript:void(0)" ng-click="ClearAll()"
+                            class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                        <span data-ng-if="warehouseReleaseSaveData.items">
+                            <a href="javascript:void(0)" ng-click="SaveValidate()"
+                                class="btn btn-sm btn-dark mx-1">ADD</a>
+                        </span>
+
+                        <span data-ng-if="!warehouseReleaseSaveData.items">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-dark mx-1"
+                                style="opacity: 0.5;">ADD</a>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Release Stock In (Modal) -->
+<div class="modal fade" id="addStockIn" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ labelAddabel }} Data Entry</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-4">
+                    <form action="">
+                        <div class="row gx-4 gy-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>PART NO. <span class="text-danger d-inline-block">*</span></span>
+                                    <select class="w-100" name="StockInPartNo" id="StockInPartNo" ng-model="model.StockInPartNo" ng-change="getPartNoData(getSelectedPartNo(model.StockInPartNo))">
+                                        <option value="">Select Part No</option>
+                                        <option ng-repeat="part_no in partnolist"
+                                            value="{{part_no.code}}">{{part_no.code}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <span>ITEM</span>
+                                    <input type="text" class="w-100 readonly" name="StockinItemName" id="StockinItemName" data-ng-model="vm.model.StockinItemName" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span>SIZE</span>
+                                    <input type="text" class="w-100 readonly" name="StockinItemSize" id="StockinItemSize" data-ng-model="vm.model.StockinItemSize" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>NO OF CARTON</span>
+                                    <input type="text" class="w-100" name="StockinNoofCartton" id="StockinNoofCartton"
+                                        data-ng-model="vm.model.StockinNoofCartton" oninput="this.value=this.value.replace(/[^0-9]/g,'');" ng-keyup="chk_cartoon_no()">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>CARTON QTY</span>
+                                    <input type="text" class="w-100" name="StockinCartonQty" id="StockinCartonQty"
+                                        data-ng-model="vm.model.StockinCartonQty" oninput="this.value=this.value.replace(/[^0-9]/g,'');" ng-keyup="chk_cartoon_no()">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>NO OF PALLET</span>
+                                    <input type="text" class="w-100" name="StockinNoofPallet" id="StockinNoofPallet"
+                                        data-ng-model="vm.model.StockinNoofPallet" oninput="this.value=this.value.replace(/[^0-9]/g,'');" ng-keyup="chk_pallet_no()">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>PALLET QTY</span>
+                                    <input type="text" class="w-100" name="StockinPalletQty" id="StockinPalletQty"
+                                        data-ng-model="vm.model.StockinPalletQty" oninput="this.value=this.value.replace(/[^0-9]/g,'');" ng-keyup="chk_pallet_no()">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>PREFIX <span class="text-danger d-inline-block">*</span></span>
+                                    <input type="text" class="w-100" name="StockinPrefix" id="StockinPrefix" data-ng-model="vm.model.StockinPrefix" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <span>START NO <span class="text-danger d-inline-block">*</span></span>
+                                    <input type="text" name="StockinStartNo" id="StockinStartNo" class="w-100" data-ng-model="vm.model.StockinStartNo" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="col-12 text-center">
+                            <a href="javascript:void(0)" ng-click="ClearAllStockin()" class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                            <a href="javascript:void(0)" ng-click="SaveValidateStockin()" class="btn btn-sm btn-dark mx-1">ADD</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print -->
+
+<div class="modal fade" id="print_modal" tabindex="-1" aria-labelledby="print_modal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="btn btn-sm btn-danger mx-1" data-ng-click="printDiv()">Print</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="printableContent">
+                <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 20px;">
+                    PATTON INTERNATIONAL INC<br>
+                    1744 ENCLAVE GREEN CV, GERMANTOWN, TN 38139-5715, U.S.A.
+                </div>
+
+                <div style="  text-align: center;
+                        margin-bottom: 10px;">
+                    <span style=" font-weight: bold; font-size: 14px;"><u>RELEASE AUTHORIZATION</u></span><br>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                    <div>
+                        <span style="font-weight: bold; font-size: 13px;">Attn: {{ warehouseRelease.consignee.attn }}</span>
+                        <span style="font-weight: bold; font-size: 13px; display: block; margin-top: 14px;">Trucking: {{ warehouseRelease.consignee.trucking }}</span>
+                    </div>
+                    <div style="width: 30%;">
+                        <span style="font-weight: bold; text-align: left; display: block; font-size: 13px;">{{ labelitemNumber }} Number: {{ model.itemNumber }}</span>
+                        <span style="font-weight: bold; text-align: left; display: block; font-size: 13px; margin-top: 14px;" >Date: <span id="print_date"></span></span>
+                    </div>
+                </div>
+
+                <div style="text-align: left; margin-bottom: 20px; width: 100%;">
+                    <span style="display: block; font-weight: bold; margin-bottom: 10px; font-size: 13px;">Ship-To-Address:</span>
+                    <span><strong style="display: block; font-size: 13px;">{{ warehouseRelease.consignee.name }}</strong></span>
+                    <span style="font-size: 13px;">{{warehouseRelease.consignee.addressLine1}}</span>
+                    <span style="font-size: 13px;" ng-if="warehouseRelease.consignee.addressLine2 !== undefined && warehouseRelease.consignee.addressLine2 !== null && warehouseRelease.consignee.addressLine2.trim() !== ''">
+                        <br>{{ warehouseRelease.consignee.addressLine2 }}
+                    </span>
+                    <span style="font-size: 13px;" ng-if="warehouseRelease.consignee.addressLine3 !== undefined && warehouseRelease.consignee.addressLine3 !== null && warehouseRelease.consignee.addressLine3.trim() !== ''">
+                        <br>{{ warehouseRelease.consignee.addressLine3 }}
+                    </span>
+                    <span style="font-size: 13px;" ng-if="warehouseRelease.consignee.addressLink4 !== undefined && warehouseRelease.consignee.addressLink4 !== null && warehouseRelease.consignee.addressLink4.trim() !== ''">
+                        <br>{{ warehouseRelease.consignee.addressLink4 }}
+                    </span>
+                    <span style="font-size: 13px;" ng-if="warehouseRelease.consignee.addressLine5 !== undefined && warehouseRelease.consignee.addressLine5 !== null && warehouseRelease.consignee.addressLine5.trim() !== ''">
+                        <br>{{ warehouseRelease.consignee.addressLine5 }}
+                    </span>
+                    <span style="font-size: 13px;" ng-if="warehouseRelease.consignee.addressLine6 !== undefined && warehouseRelease.consignee.addressLine6 !== null && warehouseRelease.consignee.addressLine6.trim() !== ''">
+                        <br>{{ warehouseRelease.consignee.addressLine6 }}
+                    </span>
+                </div>
+
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <table style=" width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">INVOICE NO</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">PART NO</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">ITEMS</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">PALLET</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">PCS</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">PO#SQNCE NO.</th>
+                        </tr>
+                        <tr data-ng-repeat="item in warehouseRelease.items" data-ng-if="warehouseRelease.items">
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.invoiceNumber}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.partNo}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.size}} {{item.item}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
+                                {{item.prefix}}/{{item.startno}} 
+                                <span ng-if="item.cartons > 0 || item.cartons !== null && item.cartons != ''">
+                                    -- ({{item.cartons}}) Cartons
+                                </span>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
+                        
+                                <!-- if both quantity and cartonQuantity are greater than 0 -->
+                                <span ng-if="item.quantity > 0 && item.quantity !== null && item.quantity !== '' && item.cartonQuantity > 0 && item.cartonQuantity !== null && item.cartonQuantity !== ''">
+                                    {{item.quantity + item.cartonQuantity}}
+                                </span>
+
+                                <!-- else if only quantity is greater than 0 -->
+                                <span ng-if="item.quantity > 0 && (item.cartonQuantity === 0 || item.cartonQuantity === null || item.cartonQuantity === '')">
+                                    {{item.quantity}}
+                                </span>
+
+                                <!-- else if only cartonQuantity is greater than 0 -->
+                                <span ng-if="item.cartonQuantity > 0 && (item.quantity === 0 || item.quantity === null || item.quantity === '')">
+                                    {{item.cartonQuantity}}
+                                </span>
+
+                                <!-- else when both quantity and cartonQuantity are zero or empty -->
+                                <span ng-if="(item.quantity === 0 || item.quantity === null || item.quantity === '') && (item.cartonQuantity === 0 || item.cartonQuantity === null || item.cartonQuantity === '')">
+                                    0
+                                </span>
+
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.poNumber}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <div>
+                        <div style="margin-top: 20px; text-align: center; font-size: 14px;">
+                            
+                            TOTAL {{ getTotalPallets() }}
+                            SKIDS AND {{ getTotalCarton() }} CARTONS<br>
+                            Thank You
+                        </div>
+                
+                        <div style="margin-top: 16px; text-align: center; font-size: 14px;">
+                            On Behalf of PATTON INTERNATIONAL INC
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+        $("#datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+
+    // $('#normalize').selectize();
+
+    $(document).ready(function () {
+        // Initialize select2
+        $("#partyCode").select2();
+        $("#consigneeCode").select2();
+        $("#buyerCode").select2();
+        $("#cfDestimation").select2();
+
+        $('#addrelease').on('shown.bs.modal', function () 
+        {
+            $('#partNo').select2({
+                dropdownParent: $('#addrelease')  // Attach the dropdown to the modal
+            });
+        });
+
+        $('#addStockIn').on('shown.bs.modal', function () 
+        {
+            $('#StockInPartNo').select2({
+                dropdownParent: $('#addStockIn')  // Attach the dropdown to the modal
+            });
+        });
+    });
+
+    $(".my-textbox").keyup(function (e) 
+    {
+    var val = $(this).val();
+    filter(val.toLowerCase());
+    });
+
+    $(".my-textbox").on("paste", function () {
+    var element = this;
+    setTimeout(function () {
+    var text = $(element).val().toLowerCase();
+    filter(text);
+    }, 100);
+    });
+
+    function filter(x) {
+    var isMatch = false;
+    $(".fDestination li").each(function (i) {
+    var content = $(this).html();
+
+    if (content.toLowerCase().indexOf(x) == -1) {
+    $(this).hide();
+    } else {
+    isMatch = true;
+    $(this).show();
+    }
+    });
+
+    var ccs = $('.fDestination li').filter(function () {
+    return $(this).css('display') !== 'none';
+    }).length;
+    // $(".no-results").toggle(!isMatch);
+    $(".cc").toggle(isMatch);
+    }
+
+    var ccs = $('.fDestination li').filter(function () {
+    return $(this).css('display') !== 'none';
+    }).length;
+</script>

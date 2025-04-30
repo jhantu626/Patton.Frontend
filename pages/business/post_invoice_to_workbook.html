@@ -1,0 +1,87 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+
+<style>
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 35px;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow b
+    {
+        top: 70%;
+    }
+    
+    .select2-results__option
+    {
+        font-size: 12px;
+    }
+    
+    .select2-container .select2-selection--single
+    {
+        min-height: 37px;
+        border-radius: 5px;
+    }
+    </style>
+<!-- Main -->
+<main class="position-relative">
+    <div ng-if="list && isLoading" class="loader ploader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="post || delete">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Post Invoice to Workbook</h5>
+                    </div>
+                    <form action="" class="card-body workRelease ">
+                        <div class="p-3 bg-gray2 rounded mb-4">
+                            <div class="row">
+                                <div class="col-md-auto">
+                                    <div class="d-flex">
+
+                                        <div class="form-group">
+                                            <span class="text-start">Invoice No</span>
+                                            <div class="d-flex align-items-center">
+                                                <input class="w-100" type="text" class="form-control" name="InvoiceNo" id="InvoiceNo"/>
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-danger mx-2" ng-click="PostInvoiceToWorkbookDelete()" ng-show="delete" ng-disabled="isProcessingDelete">
+                                                    <span ng-if="!isProcessingDelete">Delete</span>
+                                                    <span ng-if="isProcessingDelete" class="d-flex align-items-center gap-2">
+                                                        <div class="spinner-border" role="status" style="width: 1rem; height: 1rem; border-width: 0.15em;">
+                                                        </div>
+                                                        <span>Deleteing...</span>
+                                                    </span>  
+                                                </a>
+
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-warning mx-2"  ng-click="PostInvoiceToWorkbookPost()" ng-show="post"  ng-disabled="isProcessingPost">
+                                                    <span ng-if="!isProcessingPost">Post</span>
+                                                    <span ng-if="isProcessingPost" class="d-flex align-items-center gap-2">
+                                                        <div class="spinner-border text-dark" role="status" style="width: 1rem; height: 1rem; border-width: 0.15em;">
+                                                        </div>
+                                                        <span>Processing...</span>
+                                                    </span>                                               
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!post && !delete">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

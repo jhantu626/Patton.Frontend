@@ -1,0 +1,279 @@
+
+    <!-- Main -->
+    <main class="position-relative">
+        <div ng-if="isLoading" class="loader ploader">
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+            <div class="dot dot-4"></div>
+            <div class="dot dot-5"></div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center justify-content-between heading-sticky">
+                            <h5 class="card-title text-uppercase mb-0">User</h5>
+                            <a href="javascript:void(0);"  data-bs-toggle="modal" data-bs-target="#add_edit_user"
+                                class="btn btn-sm btn-dark mx-1" ng-if="add">Add User Details</a>
+                          </div>
+                        <form>
+                            <div class="card-body workRelease">
+
+                                <div class="p-3 bg-gray2 rounded mb-4">
+                                    <div class="row">
+        
+                                        <div class="col-md-auto">
+                                            <div class="d-flex">
+                                                <div class="form-group">
+                                                    <span class="text-start">Username</span>
+                                                    <input type="text" name="txt_userName" id="txt_userName" style="width: 300px;" data-ng-model="model.searchusername">
+                                                    <a href="javascript:void(0)" ng-click="UesrSearch()" class="btn btn-sm btn-danger mx-1">Search</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mb-3" data-ng-if="userDetails.length>0">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header p-3">
+                            <h5 class="card-title text-uppercase mb-0">User List</h5>
+                        </div>
+                        <div class="card-body workRelease">
+                            <table class="table table-bordered mt-3 dataTable" ng-rows="userDetails">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th ng-sortable>Userame</th>
+                                        <th ng-sortable>Category</th>
+                                        <th ng-sortable>Party</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Code</th>
+                                        <th>Designation</th>
+                                        <th>Location</th>
+                                        <th>Login Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-row>
+                                        <td>{{row.username}}</td>
+                                        <td>{{row.userCategory}}</td>
+                                        <td>{{row.party}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{row.allowLogin}}</td>
+                                        <td style="white-space: nowrap;">
+                                            <a href="javascript:void(0);" ng-click="GetUserForEdit(row.username)" ng-show="add">
+                                                <i class="ri-edit-2-line mx-1"></i>
+                                            </a>
+
+                                            <a href="#!/user-details/{{row.username}}" ng-show="add"><i class="ri-eye-line mx-1"></i></a>
+
+                                            <a href="javascript:void(0);" ng-click="passwordChange(row.id)">
+                                                <i class="ri-lock-2-line mx-1"></i>
+                                            </a>
+
+                                            <!-- <a href="users-details.html" title="Role"><i class="ri-information-2-fill"></i></a>
+                                            <a href="#" title="Edit"><i class="ri-edit-box-fill text-primary"></i></a>
+                                            <a href="#" title="Delete"><i class="ri-delete-bin-fill text-danger"></i></a> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3 mb-3 notFound" data-ng-if="norRsultFound">
+                <h3 class="text-danger fs-6">{{norRsultFound}}</h3>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="add_edit_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">User Create</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" class="modal-body">
+                    <div class="row gx-4 gy-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Username</span>
+                                <input type="text" name="username" id="" data-ng-model="model.username" class="w-100">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Password</span>
+                                <input type="text" name="password" id="" data-ng-model="model.password" class="w-100">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Confirm Password</span>
+                                <input type="text" name="ConfirmPassword" id="" data-ng-model="model.ConfirmPassword" class="w-100">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">User Caterory</span>
+                                <input type="text" name="user_caterory" id="" data-ng-model="model.user_caterory" class="w-100">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Party</span>
+                                <input type="text" name="party" id="" data-ng-model="model.party" class="w-100">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <hr>
+                    <div class="col-12 text-center">
+                        <!-- <a href="javascript:void(0);" ng-click="reset()" id="reset_btn"
+                            class="btn btn-sm btn-danger mx-1">CLEAR</a> -->
+                        <a href="javascript:void(0);" ng-click="user_create()"
+                            class="btn btn-sm btn-dark mx-1">Create User</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">User Profile Update</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" class="modal-body">
+                    <div class="row gx-4 gy-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Username</span>
+                                <input type="text" name="edit_username" id="edit_username" data-ng-model="model.edit_username" class="w-100">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">User Caterory</span>
+                                <input type="text" name="edit_user_caterory" id="" data-ng-model="model.edit_user_caterory" class="w-100">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Party</span>
+                                <input type="text" name="edit_party" id="" data-ng-model="model.edit_party" class="w-100">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <hr>
+                    <div class="col-12 text-center">
+                        <a href="javascript:void(0);" ng-click="userUpdate()"
+                            class="btn btn-sm btn-dark mx-1">Update</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">User Profile Update</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" class="modal-body">
+                    <div class="row gx-4 gy-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Username</span>
+                                <input type="text" name="edit_username" id="edit_username" data-ng-model="model.edit_username" class="w-100">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">User Caterory</span>
+                                <input type="text" name="edit_user_caterory" id="" data-ng-model="model.edit_user_caterory" class="w-100">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="text-start">Party</span>
+                                <input type="text" name="edit_party" id="" data-ng-model="model.edit_party" class="w-100">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <hr>
+                    <div class="col-12 text-center">
+                        <a href="javascript:void(0);" ng-click="userUpdate()"
+                            class="btn btn-sm btn-dark mx-1">Update</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Change Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" class="modal-body">
+                    <div class="row gx-4 gy-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <span class="text-start">New Password</span>
+                                <input type="text" name="newpassword" id="newpassword" data-ng-model="model.newpassword" class="w-100">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <span class="text-start">Confirm Password</span>
+                                <input type="text" name="confirmpassword" id="confirmpassword" data-ng-model="model.confirmpassword" class="w-100">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <hr>
+                    <div class="col-12 text-center">
+                        <input type="hidden" name="userId" id="userId">
+                        <a href="javascript:void(0);" ng-click="changePassword()"
+                            class="btn btn-sm btn-dark mx-1">Update</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

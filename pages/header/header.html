@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg navbar-default py-0 navpanel" data-ng-controller="DashboardController">
+    <div class="container-fluid">
+        <a class="navbar-brand me-4" href="/">
+            <img src="assets/images/logo.png" alt="" height="50px">
+        </a>
+        <!-- Button -->
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbar-default" aria-controls="navbar-default" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="icon-bar top-bar mt-0"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+        </button>
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbar-default">
+
+            
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item dropdown" ng-repeat="menu in menulist">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarBrowse" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" data-bs-display="static">
+                        {{ menu.name }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-arrow">
+
+                        <li ng-repeat="submenu in menu.menus" class="dropdown-submenu" ng-class="{'dropend': submenu.menus1.length}">
+                            <a class="dropdown-item dropdown-toggle" ng-if="submenu.menus1.length" href="javascript:void(0)">
+                                {{ submenu.name }}
+                            </a>
+                            <a class="dropdown-item" ng-if="!submenu.menus1.length" href="{{submenu.url}}">
+                                {{ submenu.name }}
+                            </a>
+            
+                            <ul class="dropdown-menu" ng-if="submenu.menus1.length">
+                                <li ng-repeat="subsubmenu in submenu.menus1">
+                                    <a class="dropdown-item" href="{{ subsubmenu.url }}">{{ subsubmenu.name }}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav navbar-right-wrap">
+                <li class="dropdown d-inline-block">
+                    <a class="ms-3 me-3 dropdown-toggle" href="#" id="navbarBrowse" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" data-bs-display="static">
+                        {{loggedInUser.username}}
+                        <!-- {{loggedInUser.roles}} -->
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" style="min-width: 215px;">
+                        <ul class="rightMenu">
+                            <li class="mb-3">
+                                <a href="#!/change-password" class="fs-6 py-0">
+                                    <i class="ri-lock-fill"></i> Change Password
+                                </a>
+                            </li>
+
+                            <li>
+                                <a data-ng-click="logout()" href="#!/" class="fs-6 py-0">
+                                    <i class="ri-lock-fill"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

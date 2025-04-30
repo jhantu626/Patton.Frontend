@@ -1,0 +1,237 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+
+<style>
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 35px;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow b
+    {
+        top: 70%;
+    }
+    
+    .select2-results__option
+    {
+        font-size: 12px;
+    }
+    
+    .select2-container .select2-selection--single
+    {
+        min-height: 37px;
+        border-radius: 5px;
+    }
+    </style>
+<!-- Main -->
+<main class="position-relative">
+    <div ng-if="list && isLoading" class="loader ploader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Rate Master</h5>
+                    </div>
+                    <form action="" class="card-body workRelease ">
+                        <div class="p-3 bg-gray2 rounded mb-4">
+                            <div class="row">
+
+                                <div class="col-md-auto">
+                                    <div class="d-flex">
+                                        <div class="form-group">
+                                            <span class="text-start">Party</span>
+                                            <select class="w-100 bg-white" style="width: 420px;" name="partyCode" id="partyCode" ng-model="model.partyCode" ng-change="getDate(model.partyCode)">
+                                                <option value="">Select Party</option>
+                                                <option ng-repeat="option in CustomerList" value="{{option.code}}" >
+                                                    {{option.code}} ({{option.name}})
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <span class="text-start">Date</span>
+                                            <div class="d-flex align-items-center">
+                                                <select class="w-100 bg-white" style="width: 200px;" name="RateDate" id="RateDate">
+                                                    <option value="">Select Date</option>
+                                                    <option ng-repeat="date in RateDateList" value="{{date.date}}">{{date.date | date:'dd-MMM-yyyy'}}</option>
+                                                </select>
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-danger mx-2" ng-click="getRateItem()">Get Data</a>
+
+
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-warning mx-2" ng-if="RateItemList.length>0" ng-click="exportToExcel()">Convert to Excel</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group mx-3">
+                                            <span class="text-start">Release Invoice Applicable Rate Date</span>
+                                            <input class="w-100" type="text" class="form-control"
+                                            name="itemDate" id="datepicker1" readonly placeholder="dd-mm-yyyy" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <span class="text-start">Customer Confirmation Date</span>
+                                            <input class="w-100" type="text" class="form-control"
+                                            name="itemDate" id="datepicker2" readonly placeholder="dd-mm-yyyy" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-if="RateItemList.length>0" class="pt-3 bg-white">
+                            <table class="table table-bordered mt-3 ">
+                                <thead class="table-secondary ">
+                                    <tr>
+                                        <th class="text-center" style="width: 7%;">Sl No.</th>
+                                        <th>Item Name</th>
+                                        <th>Size</th>
+                                        <th>Rate</th>
+                                        <th>Unit</th>
+                                        <th>Part No</th>
+                                        <th>Release Inv Rate Date</th>
+                                        <th>Conf. Date</th>
+                                        <th>Prefix</th>
+                                        <th>Suffix</th>
+                                        <th>Ref. Party</th>
+                                        <th>Original Rate</th>
+                                        <th>Deduction</th>
+                                        <th>Creation Date Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in RateItemList">
+                                        <td class="text-center">{{$index+1}}</td>
+                                        <td>{{item.productName}}</td>
+                                        <td>{{item.size}}</td>
+                                        <td>{{item.rate}}</td>
+                                        <td>{{item.unit}}</td>
+                                        <td>{{item.partNo}}</td>
+                                        <td>{{item.releaseInvRateDate | date:'dd-MMM-yyyy'}}</td>
+                                        <td>{{item.confDate | date:'dd-MMM-yyyy'}}</td>
+                                        <td>{{item.prefix}}</td>
+                                        <td>{{item.suffix}}</td>
+                                        <td>{{item.refParty}}</td>
+                                        <td>{{item.originalRate}}</td>
+                                        <td>{{item.deduction}}</td>
+                                        <td>{{item.creationDateTime | date:'dd-MMM-yyyy HH:mm:ss'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- <div class="d-flex justify-content-center sticky-bottom bg-white p-3">
+                                <a href="javascript:void(0);" class="btn btn-sm btn-dark mx-1">SAVE</a>
+
+                                <a href="javascript:void(0);" class="btn btn-sm btn-danger mx-1">DELETE</a>
+
+                                <a href="javascript:void(0);" class="btn btn-sm btn-warning mx-1">PRINT</a>
+                            </div> -->
+                        </div>
+
+                        <div class="text-center mt-3 mb-3 notFound" data-ng-if="norRsultFound">
+                            <h3 class="text-danger fs-6">{{norRsultFound}}</h3>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="card mt-3 mb-4 sticky-bottom" ng-if="RateItemList.length>0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-dark mx-1">SAVE</a>
+                            <a href="javascript:void(0);" class="btn btn-sm btn-warning mx-1" ng-click="printRateItem()">PRINT</a>
+                            <a href="javascript:void(0);" class="btn btn-sm btn-danger mx-1">DELETE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Print -->
+
+<div class="modal fade" id="print_modal" tabindex="-1" aria-labelledby="print_modal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="btn btn-sm btn-danger mx-1" data-ng-click="printRateList()">Print</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="printRateContent">
+                <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 20px;">
+                    PATTON INTERNATIONAL LIMITED<br>
+                    3C, CAMAC STREET, KOLKATA - 700 016
+                    <!-- 1744 ENCLAVE GREEN CV, GERMANTOWN, TN 38139-5715, U.S.A. -->
+                </div>
+
+                <div style="  text-align: center;
+                        margin-bottom: 10px;">
+                    <span style=" font-weight: bold; font-size: 14px;">RATE CHART</span><br>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                    <div>
+                        <span style="font-weight: bold; font-size: 13px;">PARTY : <span id="partyName"></span></span>
+                    </div>
+                    <div style="width: 30%;">
+                        <span style="font-weight: bold; text-align: left; display: block; font-size: 13px;">RATE CHART As on : </span>
+                    </div>
+                </div>
+
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <table style=" width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0; text-align: center;">Sl No.</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0; text-align: center;">Item Name</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0; text-align: center;">Size</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0; text-align: center;">Part No</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0; text-align: center;">Rate / Pcs (USD)</th>
+                            <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0; text-align: center;">Unit / KG</th>
+                        </tr>
+                        <tr ng-if="item.productName && item.size" data-ng-repeat="item in RateItemList">
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px; text-align: center;">
+                                {{$parent.$index + 1}}
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.productName}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.size}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{item.partNo}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px; text-align: right;">{{item.rate}}</td>
+                            <td style="border: 1px solid black; padding: 8px; font-size: 12px; text-align: center;">{{item.unit}}</td>
+                        </tr>                      
+                    </table>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function () {
+    $("#datepicker1").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+
+    $("#datepicker2").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+});
+$(document).ready(function () {
+        // Initialize select2
+        $("#partyCode").select2();
+        $("#RateDate").select2();
+    });
+</script>

@@ -1,0 +1,139 @@
+<!-- Main -->
+<main class="position-relative">
+    <div ng-if="list && isLoading" class="loader ploader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Clearing Agent Master</h5>
+                    </div>
+                    <form action="" class="card-body workRelease">
+                        <div class="d-flex justify-content-end mb-3">
+                            <a href="javascript:void(0);" ng-if="add" data-bs-toggle="modal" data-bs-target="#add_edit_clearing_agent"
+                                class="btn btn-sm btn-dark mx-1" ng-click="reset()">Add Clearing Agent</a>
+                        </div>
+
+                        <table class="table table-bordered mt-4 dataTable" ng-rows="ClearingAgentList">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th ng-sortable>Code</th>
+                                    <th ng-sortable>Name</th>
+                                    <th ng-sortable>Licence No</th>
+                                    <th ng-sortable>Address</th>
+                                    <th ng-sortable>City</th>
+                                    <th ng-sortable>Pin</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-row>
+                                    <td>{{row.code}}</td>
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.licenceno}}</td>
+                                    <td>{{row.add1}} {{row.add2}}</td>
+                                    <td>{{row.city}}</td>
+                                    <td>{{row.pin}}</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" ng-show="add" data-bs-toggle="modal"
+                                            data-bs-target="#add_edit_clearing_agent"
+                                            ng-click="get_clearing_agent_details(row.code)">
+                                            <i class="ri-edit-2-fill text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Release (Modal) -->
+<div class="modal fade" id="add_edit_clearing_agent" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ClearingAgentlabel}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="modal-body">
+                <div class="row gx-4 gy-3">
+                    <div class="col-md-3">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Code</span>
+                            <input type="text" class="w-100" name="code" id="code" data-ng-model="model.code" style="text-transform: uppercase;">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-5">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Name</span>
+                            <input type="text" class="w-100" name="name" id="name" data-ng-model="model.name">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Licence No</span>
+                            <input type="text" class="w-100" name="licenceno" id="licenceno" data-ng-model="model.licenceno">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Address Line 1</span>
+                            <input type="text" class="w-100" name="addressline1" id="addressline1" data-ng-model="model.addressline1">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Address Line 2</span>
+                            <input type="text" class="w-100" name="addressline2" id="addressline2" data-ng-model="model.addressline2">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>City</span>
+                            <input type="text" class="w-100" name="city" id="city" data-ng-model="model.city">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Pin</span>
+                            <input type="text" class="w-100" name="pin" id="pin" data-ng-model="model.pin">
+                        </div>
+                    </div>
+                    
+                </div>
+                <hr>
+                <div class="col-12 text-center">
+                    <a href="javascript:void(0);" ng-click="reset()" id="reset_btn"
+                        class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                    <a href="javascript:void(0);" ng-click="create(mode)"
+                        class="btn btn-sm btn-dark mx-1">{{add_btn}}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

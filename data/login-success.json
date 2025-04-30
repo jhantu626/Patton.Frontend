@@ -1,0 +1,13 @@
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkyODIwY2MwYTZhNTRjMjM4Njg0MzcyODA0ZTM3MWZmIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiREFTSEJPQVJEX1VTRVIiLCJVU0VSIiwiUk9MRTIiLCJST0xFMyJdLCJleHAiOjE3MTQxNDA5ODksImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzAzNiIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzAzNiJ9.n2dNRJAvhhWpr9LFjpIuH_VjlbDbLGFIU3aPRr2__5Q",
+    "expiration": "2024-05-18T17:28:29Z",
+    "roles": [
+        "DASHBOARD_USER",
+        "USER",
+        "ROLE2",
+        "ROLE3"
+    ],
+    "menus": {},
+    "errorCode": null,
+    "errorDescription": null
+}

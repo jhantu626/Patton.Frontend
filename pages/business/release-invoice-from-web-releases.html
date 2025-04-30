@@ -1,0 +1,509 @@
+<style>
+    #printRateContent table td
+    {
+        padding: 7px;
+        border: 1px solid #888;
+        font-size: 11px;
+    }
+    th
+    {
+        padding: 5px;
+        font-size: 11px;
+        border: 1px solid #000;
+        text-align: center;
+        background: #f0f0f0;
+    }
+</style>
+<!-- Main -->
+<div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="isBodyLoading">
+    <div class="ldio-4j5ay0xf86g">
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+</div>
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="" class="card mb-3">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">RELEASE INVOICE</h5>
+                    </div>
+                    <div class="card-body workRelease">
+                        <div class="p-3 bg-gray2 rounded mb-4">
+                            <div class="row">
+                                <div class="col-lg-5 radioOption">                                        
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <span>Invoice From</span>
+                                            <div class="bg-gray4 p-2 px-3 rounded d-flex justify-content-around">
+                                                <label>
+                                                    <input type="radio" name="source" data-ng-model="model.source" value="PIL" data-ng-change="InvoiceFrom()" data-ng-checked="ReleaseNoList.source === 'PIL'" disabled=""> From PIL
+                                                </label>
+                                                <label class="m-0">
+                                                    <input type="radio" name="source" data-ng-model="model.source" value="PII" data-ng-change="InvoiceFrom()" data-ng-checked="ReleaseNoList.source === 'PII'" disabled=""> From PII
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <span>Destination</span>
+                                                <select class="w-100" name="consigneeCode" id="consigneeCode" ng-model="model.consigneeCode" ng-change="getConsigneeDetails(model.consigneeCode)">
+                                                    <option value="">Select Consignee Code</option>
+                                                    <option ng-repeat="option in ConsigneeCodeList" value="{{option.code}}">
+                                                        {{option.code}} ({{option.name}})
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <span>Rel Invoice No.</span>
+                                                <input type="text" name="RelInvoiceNo" id="RelInvoiceNo" class="w-100 my-textbox" 
+                                                data-ng-model="model.relInvoiceNo" ng-blur="GetReleasesInvoice()" style="text-transform: uppercase;" ng-keyup="ReleaseInvoice_display_block()">
+
+                                                <div class="completedInvoices" id="completedInvoices" style="display: none;">
+                                                    <ul>
+                                                        <li data-ng-repeat="invoice in completedInvoicesList" ng-click="get_ReleaseInvoice(invoice); GetReleasesInvoice()">{{invoice}}</li>
+                                                    </ul>
+                                                </div>
+
+                                                <!-- <input class="w-100 my-textbox" type="text" name="cfDestimation" data-ng-model="model.cfDestimation" style="text-transform: uppercase;" value="{{warehouseRelease.cfDestimation}}" ng-keyup="f_destination_display_block()"> -->
+                                                        <!-- <div class="fDestination" id="f_destination" style="display: none;">
+                                                            <ul>
+                                                                <li data-ng-repeat="destination in FdestinationList" ng-click="get_fdestination(destination)">{{destination}}</li>
+                                                            </ul>
+                                                        </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <span>Invoice Date</span>
+                                                <input type="text" name="invoiceDate" ng-model="model.invoiceDate" id="datepicker1" class="w-100" readonly placeholder="dd-mm-yyyy" value="{{ReleaseNoList.invoiceDate}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <span>Due Date</span>
+                                                <input type="text" name="dueDate" ng-model="model.dueDate" id="datepicker2" class="w-100" readonly placeholder="dd-mm-yyyy" value="{{ ReleaseNoList.dueDate}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7 ps-lg-5">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="form-group mx-0 pb-1">
+                                                <span class="text-start">Billing Details</span>
+                                                <input type="text" name="consigneeBcode" id="consigneeBcode" class="w-100 readonly" readonly data-ng-model="model.consigneeBcode">
+                                            </div>
+                                            <div class="radioOption px-3 pt-2 rounded mt-2 border border-dark">
+                                                <label>
+                                                    <input type="radio" name="saleType" id="saleType"
+                                                        value="LOCAL" data-ng-model="model.saleType" data-ng-checked="ReleaseNoList.saleType === 'LOCAL'" disabled=""> Local Sale
+                                                </label>
+                                                <label class="m-0">
+                                                    <input type="radio" name="saleType" id="saleType"
+                                                        value="Out of State Sale" data-ng-model="model.saleType" data-ng-checked="ReleaseNoList.saleType === ''" disabled=""> Out of State Sale
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group mt-3">
+                                                <textarea name="consigneeAddress" id="consigneeAddress" class="w-100 readonly" cols="5" rows="5" style="resize: none;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-lg-10 col-md-9">
+                                <h6>Release No List</h6>
+                                <div class="table-scroll-div">
+                                    <table class="table table-bordered">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>Select</th>
+                                                <th>Warehouse</th>
+                                                <th>Release No</th>
+                                                <th>Release Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-if="ReleaseNoList.releases.length>0" ng-repeat="item in ReleaseNoList.releases">
+                                                <td>
+                                                    <input type="checkbox" 
+                                                    name="ReleaseNoCheck" 
+                                                    id="ReleaseNoCheck2{{$index+1}}" 
+                                                    style="width: 18px; height: 18px;" 
+                                                    ng-model="item.selected" 
+                                                    ng-change="updateSelectedItems(item)" 
+                                                    ng-disabled="isdisableReleaseNo">
+                                                </td>
+                                                <td>{{item.billParty}}</td>
+                                                <td>{{item.itemNumber}}</td>
+                                                <td>{{item.itemDate | date:'dd-MMM-yyyy'}}</td>
+                                            </tr>
+
+                                            <tr ng-if="pendingInvoices.length>0" ng-repeat="item in pendingInvoices">
+                                                <td>
+                                                    <input type="checkbox" 
+                                                    name="pendingCheck" 
+                                                    style="width: 18px; height: 18px;" 
+                                                    id="pendingCheck1{{$index+1}}" 
+                                                    ng-model="item.selected" 
+                                                    ng-change="updateSelectedItems(item)" 
+                                                    ng-disabled="isdisableRelease">
+                                                </td>
+                                                <td>{{item.billParty}}</td>
+                                                <td>{{item.itemNumber}}</td>
+                                                <td>{{item.itemDate | date:'dd-MMM-yyyy'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-3">
+                                <div class="radioOption px-3 pt-2 rounded mt-4 mb-3 border border-dark">
+                                    <label>
+                                        <!-- <input type="radio" name="invoiceValue" data-ng-model="model.BillingDetails" value="PIL" data-ng-change="InvoiceFrom()" data-ng-checked="model.type === 'PIL'"> -->
+                                        <input type="radio" name="type" id="type" value="NORMAL" data-ng-checked="ReleaseNoList.type === 'NORMAL'" disabled=""> Normal
+                                    </label>
+                                    <label class="m-0">
+                                        <input type="radio" name="type" id="type" value="REJECTED" data-ng-checked="ReleaseNoList.type === 'REJECTED'" disabled=""> Rejected
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <span class="text-start">Rate Date</span>
+                                    <div class="d-flex">
+                                        <input type="text" name="rateDate" id="datepicker3" class="w-100" readonly placeholder="dd-mm-yyyy" data-ng-model="model.rateDate">
+                                        <button type="button" class="btn btn-dark btn-sm ms-2" data-ng-click="GetReleaseInvoiceDetails()">APPLY</button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <input type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#show_details"  id="btn_show_details" data-ng-click="ShowRateDetails()" value="SHOW DETAILS">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 col-lg-3">
+                                <h6 class="mb-2">Payment Type</h6>
+                                <div class="radioOption px-3 pt-2 bg-gray2 rounded mb-4 border border-dark">
+                                    <label>
+                                        <input type="radio" name="paymentMethod" id="paymentMethod" value="WIRE"  data-ng-checked="ReleaseNoList.paymentMethod === 'WIRE'" data-ng-model="model.paymentMethod" data-ng-change="InvoiceFrom()" disabled=""> Wire Transfer
+                                    </label>
+                                    <label class="m-0">
+                                        <input type="radio"  name="paymentMethod" id="paymentMethod" value="COLLECTION" data-ng-checked="ReleaseNoList.paymentMethod === 'COLLECTION'" disabled="" data-ng-model="model.paymentMethod" data-ng-change="InvoiceFrom()"> Collection
+                                    </label>
+                                </div>
+                                <div class="radioOption px-3 pt-2 rounded mb-3 border border-secondary">
+                                    <label>
+                                        <input type="radio" name="paymentType" id="paymentType" value="RELEASE" data-ng-checked="ReleaseNoList.paymentType === 'RELEASE'" disabled=""> Release
+                                    </label>
+                                    <label class="m-0">
+                                        <input type="radio" name="paymentType" id="paymentType" value="DEBITNOTE" data-ng-checked="ReleaseNoList.paymentType === 'DEBITNOTE'" disabled=""> Debit Note
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-lg-9">
+                                <div class="border border-dark p-3 rounded" style="min-height: 140px;">
+                                    <p class="mb-0" id="AddressBankDetails"></p>
+                                    <input type="hidden" name="bank_address" id="bank_address" ng-model="model.bank_address">
+                                </div>
+                            </div>
+                        </div>                            
+                    </div>
+                    <div class="card-footer justify-content-center text-center py-3">
+                        <input type="button" class="btn btn-sm btn-danger mx-1" id="btn_delete" value="Delete" data-ng-click="delete()">
+                        <!-- <input type="button" class="btn btn-sm btn-warning mx-1 d-none" data-bs-toggle="modal" data-bs-target="#adjustment_details" id="btn_adjustment" value="Adjustment"></a> -->
+                        <input type="button" class="btn btn-sm btn-dark mx-1" id="btn_new" value="New" data-ng-click="newAdd()">
+                        <input type="button" class="btn btn-sm btn-dark mx-1" ng-click="SaveReleaseInvoice()" id="btn_save" value="Save">
+
+                        <button class="btn btn-sm btn-dark mx-1" type="button" disabled id="btn_loader" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span role="status">Loading...</span>
+                        </button>
+
+                        <input type="button" class="btn btn-sm btn-dark mx-1" id="btn_modify" value="Modify" data-ng-click="Modify()">
+                        <input type="button" class="btn btn-sm btn-warning mx-1" ng-click="print()" id="btn_print" value="Print">
+                        
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger mx-1" data-ng-click="clear()">Clear</a>
+
+                        <input type="hidden" name="newMode" id="newMode">
+                        <!-- <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addrelease"
+                            class="btn btn-sm btn-dark mx-1">ADD</a> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main> 
+
+<div class="modal fade" id="show_details" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Show Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="details-table-scroll-div">
+                    <div class="text-center" ng-if="isLoading1">
+                        <div class="dot dot-1"></div>
+                        <div class="dot dot-2"></div>
+                        <div class="dot dot-3"></div>
+                        <div class="dot dot-4"></div>
+                        <div class="dot dot-5"></div>
+                    </div>
+
+                    <table class="table table-bordered" ng-if="isTableLoading">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th class="text-center">Part No</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-center">Rate</th>
+                                <th class="text-center">Amount</th>
+                                <th class="text-center">PO Number</th>
+                                <th class="text-center">Sequence</th>
+                                <th class="text-center">Ref. Buyer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="details in ShowDetails">
+                                <td>{{details.partNo}}</td>
+                                <td class="text-right">
+                                    {{details.qty}}
+                                    <input type="hidden" name="txtQty{{$index}}" id="txtQty{{$index}}" class="text-right" value="{{details.qty}}">
+                                </td>
+                                <td class="text-right">
+                                    <input type="text" name="txtRate" id="txtRate{{$index}}" class="text-right" value="{{details.rate | number:5}}" ng-blur="rateUpdate($index)" ng-disabled="isRateDisable">
+                                </td>
+                                <td class="text-right"><span id="amount{{$index}}">{{details.amount | number:2}}</span></td>
+                                <td class="text-right">{{details.poNo}}</td>
+                                <td>{{details.sequence}}</td>
+                                <td class="text-center">{{details.refBuyer}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="table-secondary">
+                            <tr>
+                                <th class="text-right" colspan="3">Total</th>
+                                <th class="text-right">{{totalAmount | number:2}}</th>
+                                <th colspan="3"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adjustment_details" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Adjustment Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="modal-body">
+                <table class="table table-bordered">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th class="text-center">Part No</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-center">Rate</th>
+                            <th class="text-center">Value</th>
+                            <th class="text-center">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in ReleaseNoList.adjustments">
+                            <td>{{data.partNo}}</td>
+                            <td class="text-right">{{data.qty}}</td>
+                            <td class="text-right">{{data.rate | number:5}}</td>
+                            <td class="text-right">{{data.value | number:2}}</td>
+                            <td>{{data.reason}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="print_modal" tabindex="-1" aria-labelledby="print_modal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="btn btn-sm btn-danger mx-1" data-ng-click="printDetails()">Print</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="printRateContent">
+                <div class="wrapper">
+                    <h1 style="margin: 0 0 1rem; text-align: center;font-size: 14px;">INVOICE NO: {{ReleaseNoList.relInvoiceNo}}</h1>
+                    <table cellpadding="5" cellspacing="3" border="1" width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td>
+                                <small style="display: block;">From:</small>
+                                <p style="margin: 5px 0 0;font-size: 13px;" id="from_address"></p>
+                            </td>
+                            <td>
+                                <p style="margin: 5px 0 0;font-size: 13px;">
+                                    <strong>Invoice Date:</strong> {{ReleaseNoList.invoiceDate | date:'dd-MMMM-yyyy'}}<br>
+                                    <strong>Due Date:</strong> {{ReleaseNoList.dueDate | date:'dd-MMMM-yyyy'}} <br>
+                                    <strong>Customer's Order:</strong> Shown Below
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <small style="display: block;"><b>Sold To:</b></small>
+                                <p style="margin: 5px 0 0;font-size: 13px;">
+                                    {{ReleaseNoList.billPartyName}}<br>
+                                    <span data-ng-repeat="address in ReleaseNoList.billingAddress">{{address}}<br></span>
+                                </p>
+                            </td>
+                            <td>
+                                <small style="display: block;"><b>Ship To:</b></small>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellpadding="5" cellspacing="3" border="1" width="100%" style="border-collapse: collapse;">
+                        <tr style="vertical-align: top;">
+                            <td>
+                                <small style="display: block; font-weight: 500; font-size: 12px;">Shiped Via:</small>
+                                <p style="margin: 5px 0 0; text-align: center;"></p>
+                            </td>
+                            <td>
+                                <small style="display: block; font-weight: 500; font-size: 12px;">Payment Term:</small>
+                                <p style="margin: 5px 0 0; text-align: center;"></p>
+                            </td>
+                            <td>
+                                <small style="display: block; font-weight: 500; font-size: 12px;">F.O.B:</small>
+                                <p style="margin: 5px 0 0; text-align: center;">Warehouse</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <table cellpadding="5" cellspacing="3" border="1" width="100%" style="border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th>Qty Ordered</th>
+                                <th>Qty Shipped</th>
+                                <th>Part No</th>
+                                <th>Release Date</th>
+                                <th>PO Number</th>
+                                <th>Unit Price</th>
+                                <th>Extended Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="details in ShowDetails">
+                                <td style="text-align: right;">{{details.qty}}</td>
+                                <td style="text-align: right;">{{details.qty}}</td>
+                                <td>{{details.partNo}}</td>
+                                <td style="text-align: center;">{{details.itemDate | date:'dd-MMM-yyyy'}}</td>
+                                <td style="text-align: center;">{{details.poNo}}</td>
+                                <td style="text-align: right;">{{details.rate | number:5}}</td>
+                                <td style="text-align: right;">{{details.amount | number:2}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border-right: none;">
+                                    <p style="text-align: right; margin-bottom: 2rem;">{{ sumOfQty }}</p>
+                                </td>
+                                <td style="border-left: none;"></td>
+                                <td colspan="4">
+                                    <span style="display: block; text-align: right;">{{totalAmount | number:2}}</span>
+                                    <div style="display: flex; justify-content:  space-between; margin-top: 15px;">
+                                        <b>TOTAL</b>
+                                        <b>{{totalAmount | number:2}}</b>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="border-top: 1px solid #000;">
+                                <td colspan="7">
+                                    <p style="margin: 0; font-weight: 600;"><strong>Payment Details:</strong></p>
+                                    <span id="bank_details" style="font-size: 12px;"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <p style="margin: 0px; font-size: 12px;">On Behalf of PATTON INTERNATIONAL LTD. <br> Authorised Representative</p>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+$(document).ready(function () {
+    // Initialize select2
+    $("#consigneeCode").select2();
+});
+
+$(function () {
+    $("#datepicker1").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+
+    $("#datepicker2").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+
+    $("#datepicker3").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+});
+
+$(".my-textbox").keyup(function (e) 
+    {
+    var val = $(this).val();
+    filter(val.toLowerCase());
+    });
+
+    $(".my-textbox").on("paste", function () {
+    var element = this;
+    setTimeout(function () {
+    var text = $(element).val().toLowerCase();
+    filter(text);
+    }, 100);
+    });
+
+    function filter(x) {
+    var isMatch = false;
+    $(".completedInvoices li").each(function (i) {
+    var content = $(this).html();
+
+    if (content.toLowerCase().indexOf(x) == -1) {
+    $(this).hide();
+    } else {
+    isMatch = true;
+    $(this).show();
+    }
+    });
+
+    var ccs = $('.completedInvoices li').filter(function () {
+    return $(this).css('display') !== 'none';
+    }).length;
+    // $(".no-results").toggle(!isMatch);
+    $(".cc").toggle(isMatch);
+    }
+
+    var ccs = $('.completedInvoices li').filter(function () {
+    return $(this).css('display') !== 'none';
+    }).length;
+</script>

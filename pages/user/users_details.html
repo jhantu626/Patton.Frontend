@@ -1,0 +1,101 @@
+<main class="position-relative">
+    <div ng-if="isLoading" class="loader ploader" style="top: 47% !important;">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+
+    <div class="container-fluid role-dets my-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="card-header d-flex align-items-center justify-content-between p-3">
+                        <h5 class="card-title mb-0">User Details For {{userDetails[0].username}}</h5>
+                    </div>
+                    <div class="card-body workRelease">
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <table class="table table-bordered">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th>Userame</th>
+                                            <th>Category</th>
+                                            <th>Party</th>
+                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Code</th>
+                                            <th>Designation</th>
+                                            <th>Location</th>
+                                            <th>Login Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{userDetails[0].username}}</td>
+                                            <td>{{userDetails[0].userCategory}}</td>
+                                            <td>{{userDetails[0].party}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <span class="badge text-bg-success p-2 fs-8" data-ng-if="userDetails[0].allowLogin" ng-click="userRoleAssign(userDetails[0].id)">Active</span>
+                                                <span class="badge text-bg-danger p-2 fs-8" data-ng-if="!userDetails[0].allowLogin" ng-click="userRoleAssign(userDetails[0].id)">Inactive</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between p-3">
+                        <h5 class="card-title mb-0">User Role Group Details For {{userDetails[0].username}}</h5>
+                    </div>
+                    <div class="card-body workRelease">
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <table class="table table-striped table-bordered mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Role Group Name</th>
+                                                <th>Role Group Description</th>
+                                                <!-- <th style="width:10%; text-align: center;">Status</th> -->
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="data in userRoleDetails.activeRoles">
+                                                <td>{{data.name}}</td>
+                                                <td>{{data.description}}</td>
+                                                <!-- <td class="text-center"><span class="badge text-bg-danger">Inactive</span></td> -->
+                                                <td class="text-center" style="width:10%;">
+                                                    <a href="javascript:void(0)" ng-click="userRoleAssign(0,userDetails[0].id,data.id,data.mapid)" class="btn btn-danger btn-sm fs-7">Remove</a>
+                                                </td>
+                                            </tr>
+
+                                            <tr ng-repeat="data in userRoleDetails.inactiveRoles">
+                                                <td>{{data.name}}</td>
+                                                <td>{{data.description}}</td>
+                                                <!-- <td class="text-center"><span class="badge text-bg-danger">Inactive</span></td> -->
+                                                <td class="text-center" style="width:10%;">
+                                                    <a href="javascript:void(0)" ng-click="userRoleAssign(1,userDetails[0].id,data.id,data.mapid)" class="btn btn-dark btn-sm fs-7">Add</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

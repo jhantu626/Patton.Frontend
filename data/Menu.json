@@ -1,0 +1,32 @@
+
+{
+    "menu":[
+      {    
+          "name":"MASTER & INFORMATION",
+          "url":"",
+          "menu":[
+              {    
+                  "name":"Customer Master",
+                  "url":"",
+                  "menu":[
+                      {    
+                          "name":"Bill To",
+                          "url":"",
+                          "menu":[]
+                      },
+                      {    
+                          "name":"Ship To",
+                          "url":"",
+                          "menu":[]
+                      },
+                      {    
+                          "name":"Payer",
+                          "url":"",
+                          "menu":[]
+                      }
+                  ]
+              }
+          ]
+      }
+    ]
+  }

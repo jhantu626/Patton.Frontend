@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="PattonApp" data-ng-controller="PattonAppController" data-ng-cloak>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{title}}</title>
+        <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/remixicon.css">
+        <link rel="stylesheet" href="assets/css/bootstrap-icons.css">
+        <link rel="stylesheet" href="assets/css/jquery-ui.css">
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css'>
+
+        <link rel="stylesheet" href="assets/css/angularjs-datatables.css">
+        <link rel="stylesheet" href="assets/css/bootstrap-glyphicons.css">
+        <!-- <link rel="stylesheet" href="//cdn.datatables.net/1.10.8/css/jquery.dataTables.min.css"> -->
+        <link rel="stylesheet" href="//cdn.datatables.net/1.10.8/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        
+        <script src="assets/js/jquery-3.7.1.min.js"></script>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/jquery-ui.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js'></script>
+        
+        <script src="assets/js/sweet_alert.js"></script>
+
+        <script src="assets/js/angular.js"></script>
+        <script src="assets/js/angular-route.js"></script>
+        <script src="assets/js/angularjs-datatables.js"></script>
+        <script src="app.js"></script>
+        
+        <script src="app.controllers.js"></script>
+        <script src="app.factories.js"></script>
+        <script src="app.routes.js"></script>
+        <script src="app.services.js"></script>
+        
+        
+    </head>
+
+    <body>
+        <div data-ng-include="headerPath" data-ng-if="isLoggedIn"></div>
+        <div data-ng-view></div>
+    </body>
+    
+</html>

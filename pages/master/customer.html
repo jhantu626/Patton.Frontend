@@ -1,0 +1,364 @@
+<!-- Main -->
+<main class="position-relative">
+    <div ng-if="list && isLoading" class="loader ploader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Customer Master</h5>
+                    </div>
+                    
+                    <form action="" class="card-body workRelease">
+                        <div class="d-flex justify-content-end mb-3">
+                            <a href="javascript:void(0);" ng-if="add" data-bs-toggle="modal" data-bs-target="#add_edit_customer"
+                                class="btn btn-sm btn-dark mx-1" data-ng-click="reset()">Add Customer</a>
+                        </div>
+                        <table class="table table-bordered mt-3 dataTable" ng-rows="CustomerList">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th ng-sortable nowrap="">Buyer Type</th>
+                                    <th ng-sortable nowrap="">Buyer Code</th>
+                                    <th ng-sortable nowrap="">Name</th>
+                                    <th ng-sortable nowrap="">Telephone No</th>
+                                    <th ng-sortable nowrap="">Fax No</th>
+                                    <th ng-sortable nowrap="">City</th>
+                                    <th ng-sortable nowrap="">Country</th>
+                                    <th ng-sortable nowrap="">Zip Code</th>
+                                    <th nowrap="">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-row>
+                                    <td ng-switch="row.buyCon">
+                                        {{ row.buyConDesc }}
+                                    </td>
+                                    <td>{{row.code}}</td>
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.telephone}}</td>
+                                    <td>{{row.fax}}</td>
+                                    <td>{{row.city}}</td>
+                                    <td>{{row.country}}</td>
+                                    <td>{{row.zip}}</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);"  data-bs-toggle="modal"
+                                            data-bs-target="#add_edit_customer"
+                                            ng-click="get_customer_details(row.code)">
+                                            <i class="ri-edit-2-fill text-danger" ng-show="add"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Release (Modal) -->
+<div class="modal fade" id="add_edit_customer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ Customerlabel }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="modal-body bg-light">
+                <div class="row gx-4 gy-3">
+                    <div class="col-12">
+                        <div class="my-label">
+                            <h6 class="mb-0">General Information</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Buyer's Code</span>
+                            <input type="text" name="BuyerCode" id="BuyerCode" class="w-100"
+                                data-ng-model="model.BuyerCode" style="text-transform: uppercase;">
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Buyer's Name</span>
+                            <input type="text" name="Name" id="Name" class="w-100" data-ng-model="model.Name">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Address Line 1</span>
+                            <input type="text" name="AddressLine1" id="AddressLine1" class="w-100"
+                                data-ng-model="model.AddressLine1">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Address Line 2</span>
+                            <input type="text" name="AddressLine2" id="AddressLine2" class="w-100"
+                                data-ng-model="model.AddressLine2">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>City</span>
+                            <input type="text" name="City" id="City" class="w-100" data-ng-model="model.City">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Country</span>
+                            <input type="text" name="Country" id="Country" class="w-100" data-ng-model="model.Country">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Zip Code</span>
+                            <input type="text" name="ZipCode" id="ZipCode" class="w-100" data-ng-model="model.ZipCode">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Telephone No</span>
+                            <input type="text" name="TelephoneNo" id="TelephoneNo" class="w-100"
+                                data-ng-model="model.TelephoneNo">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Fax No</span>
+                            <input type="text" name="FaxNo" id="FaxNo" class="w-100" data-ng-model="model.FaxNo">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>LC</span>
+                            <input type="text" name="Lc" id="Lc" class="w-100" data-ng-model="model.Lc">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="my-label">
+                            <h6 class="mb-0">Others Information</h6>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Cdestin</span>
+                            <input type="text" name="Cdestin" id="Cdestin" class="w-100" data-ng-model="model.Cdestin">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Fdestin</span>
+                            <input type="text" name="Fdestin" id="Fdestin" class="w-100" data-ng-model="model.Fdestin">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Dis Port</span>
+                            <input type="text" name="DisPort" id="DisPort" class="w-100" data-ng-model="model.DisPort">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Selected</span>
+                            <input type="text" name="Selected" id="Selected" class="w-100"
+                                data-ng-model="model.Selected" maxlength="1">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Contact person</span>
+                            <input type="text" name="ContactPerson" id="ContactPerson" class="w-100"
+                                data-ng-model="model.ContactPerson">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>BE Name</span>
+                            <input type="text" name="BeName" id="BeName" class="w-100" data-ng-model="model.BeName">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>BE Address Line 1</span>
+                            <input type="text" name="BeAddress1" id="BeAddress1" class="w-100"
+                                data-ng-model="model.BeAddress1">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>BE Address Line 2</span>
+                            <input type="text" name="BeAddress2" id="BeAddress2" class="w-100"
+                                data-ng-model="model.BeAddress2">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>BE Address Line 3</span>
+                            <input type="text" name="BeAddress3" id="BeAddress3" class="w-100"
+                                data-ng-model="model.BeAddress3">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="my-label">
+                            <h6 class="mb-0">Payment Information</h6>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Name</span>
+                            <input type="text" name="BankName" id="BankName" class="w-100"
+                                data-ng-model="model.BankName">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Tel.</span>
+                            <input type="text" name="BankTel" id="BankTel" class="w-100" data-ng-model="model.BankTel">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Fax.</span>
+                            <input type="text" name="BankFax" id="BankFax" class="w-100" data-ng-model="model.BankFax">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Address Line 1</span>
+                            <input type="text" name="BankAddress1" id="BankAddress1" class="w-100"
+                                data-ng-model="model.BankAddress1">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Address Line 2</span>
+                            <input type="text" name="BankAddress2" id="BankAddress2" class="w-100"
+                                data-ng-model="model.BankAddress2">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Address Line 3</span>
+                            <input type="text" name="BankAddress3" id="BankAddress3" class="w-100"
+                                data-ng-model="model.BankAddress3">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Bank Address Line 4</span>
+                            <input type="text" name="BankAddress4" id="BankAddress4" class="w-100"
+                                data-ng-model="model.BankAddress4">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Payment</span>
+                            <input type="text" name="Payment" id="Payment" class="w-100" data-ng-model="model.Payment" maxlength="2">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Pay Day</span>
+                            <input type="text" name="PayDay" id="PayDay" class="w-100" data-ng-model="model.PayDay">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Agent</span>
+                            <input type="text" name="Agent" id="Agent" class="w-100" data-ng-model="model.Agent">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Payment Group</span>
+                            <input type="text" name="PaymentGroup" id="PaymentGroup" class="w-100"
+                                data-ng-model="model.PaymentGroup">
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Buyer Type</span>
+                            <div class="radioOption d-flex align-items-center">
+                                <label class="d-flex align-items-center">
+                                    <input type="radio" name="BuyerType" value="B" data-ng-model="model.BuyerType"
+                                        ng-checked="model.BuyerType === 'B'">
+                                    <span class="ms-1">Billing</span>
+                                </label>
+
+                                <label class="d-flex align-items-center">
+                                    <input type="radio" name="BuyerType" value="C" data-ng-model="model.BuyerType"
+                                        ng-checked="model.BuyerType === 'C'">
+                                    <span class="ms-1">Consignee</span>
+                                </label>
+
+                                <label class="d-flex align-items-center">
+                                    <input type="radio" name="BuyerType" value="O" data-ng-model="model.BuyerType"
+                                        ng-checked="model.BuyerType === 'O'">
+                                    <span class="ms-1">Both</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <hr>
+                <div class="col-12 text-center">
+                    <a href="javascript:void(0);" ng-click="reset()" id="reset_btn"
+                        class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                    <a href="javascript:void(0);" ng-click="create(mode)"
+                        class="btn btn-sm btn-dark mx-1">{{add_btn}}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

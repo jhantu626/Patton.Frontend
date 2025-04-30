@@ -1,0 +1,677 @@
+    <main class="position-relative">
+        <div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="list && isBodyLoading">
+            <div class="ldio-4j5ay0xf86g">
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+            </div>
+        </div>
+        
+        <div ng-if="list && isLoading" class="loader ploader my-loader pb-4">
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+            <div class="dot dot-4"></div>
+            <div class="dot dot-5"></div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12" ng-if="list">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center justify-content-between heading-sticky">
+                            <h5 class="card-title text-uppercase mb-0">Warehouse Release</h5>
+                            <select style="width:400px;" name="warehouse" id="warehouse" ng-model="selectedWarehouse" ng-change="get_warehouse_details()">
+                                <option value="">Select Warehouse</option>
+                                <option data-ng-repeat="destination in WarehouseList" value="{{destination.warehouseName}}">{{destination.warehouseName}}</option>
+                            </select>
+                        </div>
+                        <div class="card-body pt-3" id="warehouse_release" style="display: none;">
+                            <div data-ng-if="CustomerWarehouseRelease && CustomerWarehouseRelease.length > 0">
+                                <h6 class="text-primary pt-4 mb-0 pb-4 my-heading bg-white">{{ PartyNameLabel }} - Stock at {{WarehouseLabel}}</h6>
+                                <table class="table text-center">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Part No.</th>
+                                            <th>Stock Quantity</th>
+                                            <th>Transit Quantity</th>
+                                            <th>Details</th>
+                                            <th>Pallet Quantity</th>
+                                            <th>No. of Pallets</th>
+                                            <th>Req. No. of Pallets</th>
+                                            <th>Carton Quantity</th>
+                                            <th>No. of Cartons</th>
+                                            <th>Req. No. of Cartons</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="item in CustomerWarehouseRelease">
+                                        <tr>
+                                            <td colspan="10" class="text-start table-warning"><b>{{ item.name }}</b></td>
+                                        </tr>
+
+                                        <tr ng-repeat="part in item.parts">
+                                            <td>{{part.partno}}
+                                                <input type="hidden" name="hpartno{{ $parent.$index + 1 }}{{ $index + 1 }}" id="hpartno{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{part.partno}}">
+                                            </td>
+                                            <td>{{part.qty+part.cartonqty}}</td>
+                                            <td>{{part.tqty}}</td>
+                                            <td>
+                                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#customer_warehouse_release_view" class="btn btn-sm btn-primary btn-rounded view_btn" ng-click="get_warehouse_release_view(part.partno,selectedWarehouse)">
+                                                    <i class="ri-eye-fill"></i> View
+                                                </a>
+                                            </td>
+                                            <td>{{part.palletqty}}</td>
+                                            <td>{{part.noofpallet}}</td>
+                                            <td>
+                                                <input type="hidden" name="hpalletqty{{ $parent.$index + 1 }}{{ $index + 1 }}" id="hpalletqty{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{part.palletqty}}">
+
+                                                <input type="hidden" name="hnoofpallet{{ $parent.$index + 1 }}{{ $index + 1 }}" id="hnoofpallet{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{part.noofpallet}}">
+
+                                                <input class="cus_release pallet" type="text" name="noofpallet{{ $parent.$index + 1 }}{{ $index + 1 }}" id="noofpallet{{ $parent.$index + 1 }}{{ $index + 1 }}" oninput="this.value = this.value.replace(/[^0-9]/g, '');"data-ng-keyup="CheckNoOfPallet($parent.$index + 1, $index + 1)">
+                                            </td>
+                                            
+                                            <td>{{part.qtyincarton}}</td>
+                                            <td>{{part.noofcarton}}</td>
+                                            <td>
+                                                <input type="hidden" name="hnoofcarton{{ $parent.$index + 1 }}{{ $index + 1 }}" id="hnoofcarton{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{part.noofcarton}}">
+
+                                                <input type="hidden" name="hqtyincarton{{ $parent.$index + 1 }}{{ $index + 1 }}" id="hqtyincarton{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{part.qtyincarton}}">
+
+                                                <input type="hidden" name="counter{{ $parent.$index + 1 }}{{ $index + 1 }}" id="counter{{ $parent.$index + 1 }}{{ $index + 1 }}" value="{{ $parent.$index + 1 }}{{ $index + 1 }}">
+
+                                                <input class="cus_release carton" type="text" name="noofcarton{{ $parent.$index + 1 }}{{ $index + 1 }}" id="noofcarton{{ $parent.$index + 1 }}{{ $index + 1 }}" oninput="this.value = this.value.replace(/[^0-9]/g, '');"data-ng-keyup="CheckNoOfcarton($parent.$index + 1, $index + 1)">
+                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="col-12 my-4">
+                                    <label class="me-3" ng-repeat="shipto1 in CustomerWarehouseReleaseShipto">
+                                        <input id="shipto{{$index+1}}" class="me-1" name="shipto" type="radio" value="{{shipto1.name}}" ng-checked="$index === 0"> Ship to {{shipto1.name}}
+                                    </label>
+                                </div>
+
+                                <div class="col-12 text-center">
+                                    <a href="javascript:void(0);" id="reset_btn" class="btn btn-sm btn-danger mx-1" ng-click="reset()">RESET</a>
+
+                                    <button class="btn btn-sm btn-dark mx-1" type="button" ng-click="DataNextt(selectedWarehouse)" id="next_btn">
+                                        <span role="status">NEXT</span>
+                                    </button>
+
+                                    <button class="btn btn-sm btn-dark mx-1" type="button" disabled id="next_btn_loader" style="display: none;">
+                                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                        <span role="status">Loading...</span>
+                                    </button>
+                                    <!-- <a href="javascript:void(0);" class="btn btn-sm btn-dark mx-1" id="" ng-click="DataNextt(selectedWarehouse)">NEXT  </a> -->
+                                    <input type="hidden" value="0" name="pallet_count" id="pallet_count">
+                                    <input type="hidden" value="0" name="carton_count" id="carton_count">
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-2 mb-2 notFound" data-ng-if="norRsultFound !== ''">
+                                <h4 class="text-danger fs-6">{{norRsultFound}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 unauthorize" ng-if="!list">
+                    <div class="">
+                        <img src="assets/images/warning.png" style="width: 100px;">
+                        <h1 class="mt-3">401</h1>
+                        <p class="fs-4">A request was not authorized</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="customer_warehouse_release_view" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="card-header header-part-no">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="card-title text-uppercase mb-0">Part Number - {{partno}}</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="card-title text-uppercase mb-0">Size - {{size}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-content border-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 pt-3">
+                                    <div class="card-body modal_tbl">
+                                        <h6 class="text-primary">Warehouse Stock as on {{date}}</h6>
+                                        <table class="table text-center mb-0">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Invoice</th>
+                                                    <th>Pallet No.</th>
+                                                    <th>In Quantity</th>
+                                                    <th>Release Number</th>
+                                                    <th>Rel. Date</th>
+                                                    <th>Out Quantity</th>
+                                                    <th>Balance Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody data-ng-repeat="item in CustomerReleaseView.items">
+                                                <tr>
+                                                    
+                                                    <td style="border: none; background-color: #f2f2ff;">{{ item.date | date:'dd MMM yyyy' }}</td>
+                                                    <td style="border: none; background-color: #f2f2ff;">{{ item.invoiceNo }}</td>
+                                                    <td style="border: none; background-color: #f2f2ff;">{{ item.prefix }} / {{ item.startNo }}</td>
+                                                    <td style="border: none; background-color: #f2f2ff;">
+                                                        <span data-ng-if="item.noOfPallet==1">
+                                                            {{ item.qty }}
+                                                        </span>
+
+                                                        <span data-ng-if="item.noOfPallet==0">
+                                                            {{ item.recCartonQty }} ({{ item.noOfCarton }} cartons)
+                                                        </span>
+                                                    </td>
+                                                    <td style=" background-color: #f2f2ff;">{{ item.releaseDetails[0].releaseNo }}</td>
+                                                    <td style=" background-color: #f2f2ff;">{{ item.releaseDetails[0].releaseDate | date:'dd MMM yyyy' }}</td>
+                                                    <td style=" background-color: #f2f2ff;">
+
+                                                        <span data-ng-if="item.releaseDetails.length === 0">
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                0
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ item.recCartonQty }} ({{ item.noOfCarton }} cartons)
+                                                            </span>
+                                                        </span>
+
+
+                                                        <span data-ng-if="item.releaseDetails.length > 0">
+                                                            
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                {{ item.qty }}
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ item.releaseDetails[0].outQuantity }} ({{ item.releaseDetails[0].outCartons }} cartons)
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                    <td style="border: none; background-color: #f2f2ff;">
+                                                        
+                                                            <span data-ng-if="item.releaseDetails.length === 0">
+                                                                <!-- <span data-ng-if="release.releaseNo===''">
+                                                                    <span data-ng-if="item.noOfPallet>0">
+                                                                        {{ item.qty }}
+                                                                    </span>
+            
+                                                                    <span data-ng-if="item.noOfPallet==0">
+                                                                        {{ item.recCartonRty }} ({{ item.noOfCarton }} cartons)
+                                                                    </span>
+                                                                </span> -->
+    
+                                                                <!-- <span data-ng-if="release.releaseNo!==''"> -->
+                                                                    <span data-ng-if="item.noOfPallet>0">
+                                                                        {{item.qty - item.outQty}}
+                                                                    </span>
+            
+                                                                    <span data-ng-if="item.noOfPallet==0">
+                                                                        {{item.recCartonQty - item.outQty}} ({{item.noOfCarton - item.outCartonQty }} Carton)
+                                                                    </span>
+                                                                <!-- </span> -->
+                                                            </span>
+    
+                                                            <span data-ng-if="item.releaseDetails.length > 0">
+                                                                <span data-ng-if="item.releaseDetails.length===1">
+                                                                    <!-- <span data-ng-if="release.releaseNo===''">
+                                                                        <span data-ng-if="item.noOfPallet>0">
+                                                                            {{ item.qty -  item.palletQty}}
+                                                                        </span>
+                
+                                                                        <span data-ng-if="item.noOfPallet==0">
+                                                                            {{ item.recCartonQty - release.outQuantity }} ({{ item.noOfCarton - release.outCartons }} cartons)
+                                                                        </span>
+                                                                    </span> -->
+        
+                                                                    <!-- <span data-ng-if="release.releaseNo!==''"> -->
+                                                                        <span data-ng-if="item.noOfPallet>0">
+                                                                            {{ item.qty -  item.outQty}}
+                                                                        </span>
+                
+                                                                        <span data-ng-if="item.noOfPallet==0">
+                                                                            {{ item.recCartonQty - item.outQty }} ({{ item.noOfCarton - item.outCartonQty }} cartons)
+                                                                        </span>
+                                                                    <!-- </span> -->
+                                                                </span>
+                                                            </span>
+                                                        
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                <tr data-ng-repeat="release in item.releaseDetails.slice(1)">
+                                                    <td colspan="4" style="border: none !important;"></td>
+                                                    <td style="border: none;">{{release.releaseNo}}</td>
+                                                    <td style="border: none;">{{ release.releaseDate | date:'dd MMM yyyy' }}</td>
+                                                    <td style="border: none;">
+                                                        <span data-ng-if="item.releaseDetails.length === 0">
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                {{ release.qty }}
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ release.recCartonQty }} ({{ release.noOfCarton }} cartons)
+                                                            </span>
+                                                        </span>
+
+
+                                                        <span data-ng-if="item.releaseDetails.length > 0">      
+                                                            <span data-ng-if="item.noOfPallet>0">
+                                                                {{ release.qty }}
+                                                            </span>
+
+                                                            <span data-ng-if="item.noOfPallet==0">
+                                                                {{ release.outQuantity }} ({{ release.outCartons }} cartons)
+                                                            </span>
+                                                        </span>
+                                                    </td>
+
+                                                    <td style="border: none;" data-ng-if="$last">
+                                                        <span data-ng-if="item.releaseDetails.length === 0">
+                                                            <span data-ng-if="release.releaseNo===''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    {{ item.qty }}
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{ item.recCartonRty }} ({{ item.noOfCarton }} cartons)
+                                                                </span>
+                                                            </span>
+
+                                                            <span data-ng-if="release.releaseNo!==''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    0
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{item.recCartonQty - item.outQty}} ({{item.noOfCarton - item.outCartonQty }} Carton)
+                                                                </span>
+                                                            </span>
+                                                        </span>
+
+                                                        <span data-ng-if="item.releaseDetails.length !== 0">
+                                                            <span data-ng-if="release.releaseNo===''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    {{ item.qty -  release.palletQty}}
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{ item.recCartonQty - release.outQuantity }} ({{ item.noOfCarton - release.outCartons }} cartons)
+                                                                </span>
+                                                            </span>
+
+                                                            <span data-ng-if="release.releaseNo!==''">
+                                                                <span data-ng-if="item.noOfPallet>0">
+                                                                    {{ item.qty -  release.palletQty}}
+                                                                </span>
+        
+                                                                <span data-ng-if="item.noOfPallet==0">
+                                                                    {{ item.recCartonQty - item.outQty }} ({{ item.noOfCarton - item.outCartonQty }} cartons)
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                
+                                            </tbody>
+
+                                        </table>
+
+                                        <div class="stock-dets" >
+                                            <h3>Total Quantity In Stock - <span class="fw-bold ms-2">{{CustomerReleaseView.outPalletQty}}</span></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid mt-2 mb-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 modal_tbl">
+                                    
+                                    <div class="card-body transit">
+                                        <h6 class="text-primary">Transit Stock as on {{date}}</h6>
+                                        <table class="table text-center mb-0">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Invoice</th>
+                                                    <th>Pallet No.</th>
+                                                    <th>In Quantity</th>
+                                                    <th>BL Number</th>
+                                                    <th>BL Date</th>
+                                                    <th>ETA</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-ng-repeat="transit in CustomerReleaseView.transit">
+                                                    <td style="background-color: #f2f2ff;">{{transit.inV_NO}}</td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.prefix}} / {{transit.startno}}</td>
+                                                    <td style="background-color: #f2f2ff;">
+                                                        <span data-ng-if="transit.noofpallet===1">{{transit.qty}}</span>
+                                                        <span data-ng-if="transit.noofpallet===0">{{transit.qty}} ({{transit.noofcont}} cartons)</span>
+                                                    </td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.bL_NO}}</td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.bl_date | date:'dd MMM yyyy'}}</td>
+                                                    <td style="background-color: #f2f2ff;">{{transit.date | date:'dd MMM yyyy'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="stock-dets" >
+                                            <h3>Total Quantity In Transit - <span class="fw-bold ms-2">{{ getTransitQtySum() }}</span></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="customer_warehouse_release_next" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="card-header header-part-no">
+                        <div class="row">
+                            <div class="col-12">
+                                <h6 class="card-title text-uppercase mb-0">Warehouse Release</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-content border-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 pt-3">
+                                    <div class="card-body modal_tbl">
+                                        <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 20px;">
+                                            PATTON INTERNATIONAL INC<br>
+                                            1744 ENCLAVE GREEN CV, GERMANTOWN, TN 38139-5715, U.S.A.
+                                        </div>
+                        
+                                        <div style="  text-align: center;
+                                                margin-bottom: 10px;">
+                                            <span style=" font-weight: bold; font-size: 14px;"><u>RELEASE AUTHORIZATION</u></span><br>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                            <div>
+                                                <span style="font-weight: bold; font-size: 13px;">Attn: {{warehouse_consignee_details[0].attn}}</span>
+                                                <span style="font-weight: bold; font-size: 13px; display: block; margin-top: 14px;">Ship-To-Address: {{warehouse_consignee_details[0].name}}<br>
+                                                    {{warehouse_consignee_details[0].addressLine1}}
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine2 !== undefined && warehouse_consignee_details[0].addressLine2 !== null && warehouse_consignee_details[0].addressLine2.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine2 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine3 !== undefined && warehouse_consignee_details[0].addressLine3 !== null && warehouse_consignee_details[0].addressLine3.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine3 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLink4 !== undefined && warehouse_consignee_details[0].addressLink4 !== null && warehouse_consignee_details[0].addressLink4.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLink4 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine5 !== undefined && warehouse_consignee_details[0].addressLine5 !== null && warehouse_consignee_details[0].addressLine5.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine5 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine6 !== undefined && warehouse_consignee_details[0].addressLine6 !== null && warehouse_consignee_details[0].addressLine6.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine6 }}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <div style="width: 30%;">
+                                                <span style="font-weight: bold; text-align: left; display: block; font-size: 13px;">Date: {{date}}</span>
+                                                <span style="font-weight: bold; text-align: left; display: block; font-size: 13px; margin-top: 14px;" >Trucking: {{warehouse_consignee_details[0].trucking}}</span>
+                                            </div>
+                                        </div>
+
+                                        
+                                            <div class="loadingio-spinner-spinner-977el9wwy2v" ng-if="isBodyLoading">
+                                            <div class="ldio-4j5ay0xf86g">
+                                            <div></div><div></div><div></div><div></div><div></div><div></div>
+                                            <div></div><div></div><div></div><div></div><div></div><div></div>
+                                            </div>
+                                            </div>
+
+                                            <div style="width: 100%; margin-bottom: 20px;">
+                                                <table style=" width: 100%; border-collapse: collapse;">
+                                                    <tr>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Invoice No</th>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Part No</th>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Size</th>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Pallet No</th>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Pieces</th>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">PO No</th>
+                                                        <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Stock</th>
+                                                    </tr>
+                                                    <tr data-ng-repeat="nextitem in CustomerReleaseViewNext">
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{nextitem.invoiceNumber}}</td>
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{nextitem.partNo}}</td>
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{nextitem.size}} {{nextitem.item}}</td>
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{nextitem.prefix}} / {{nextitem.startno}}</td>
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
+                                                            <span data-ng-if="nextitem.pallets>0">
+                                                                {{nextitem.quantity}}
+                                                            </span>
+
+                                                            <span data-ng-if="nextitem.pallets===0 || nextitem.pallets===null">
+                                                                {{nextitem.cartonQuantity}} ({{nextitem.cartons}} cartons)
+                                                            </span>
+                                                        </td>
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
+                                                            <select class="w-100 PoNo" name="PoNo" id="PoNo{{$index}}" ng-model="model.pono" ng-change="updateNextItem($index)">
+                                                                <option ng-repeat="option in PoNumberList" value="{{option.orderNo}}">{{option.orderNo}}
+                                                                </option>
+                                                            </select>
+                                                            <!-- <input type="text" class="cus_release" name="PoNo" id="PoNo{{$index}}" ng-model="model.pono" ng-keyup="updateNextItem($index)"> -->
+                                                        </td>
+                                                        <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{nextitem.refBuyer}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            
+                                            <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                                                <div>
+                                                    <div style="margin-top: 20px; text-align: center; font-size: 14px;">
+                                                        TOTAL {{ getTotalPallets1() }} SKIDS AND {{ getTotalCarton1() }} CARTONS<br>
+                                                        Thank You
+                                                    </div>
+                                            
+                                                    <div style="margin-top: 16px; text-align: center; font-size: 14px;">
+                                                        On Behalf of PATTON INTERNATIONAL INC
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 my-4">
+                                                <label class="me-3">
+                                                    <input type="radio" class="me-1" name="shipto11" value="PIL">Release From PIL
+                                                </label>
+
+                                                <label class="me-3">
+                                                    <input type="radio" class="me-1" name="shipto11" value="PII" ng-checked="true">Release From PII
+                                                </label>
+                                            </div>
+        
+                                            <div class="col-12 text-center">
+                                                <a href="javascript:void(0);" id="reset_btn" class="btn btn-sm btn-danger m2-1" data-bs-dismiss="modal" aria-label="Close">GO BACK</a>
+                                                <a href="javascript:void(0);" class="btn btn-sm btn-dark m2-1" ng-click="DataNext2()">NEXT</a>
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="customer_warehouse_release_next2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="card-header header-part-no">
+                        <div class="row">
+                            <div class="col-12">
+                                <h6 class="card-title text-uppercase mb-0">Warehouse Release</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-content border-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 pt-3">
+                                    <div class="card-body modal_tbl">
+                                        <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 20px;">
+                                            PATTON INTERNATIONAL INC<br>
+                                            1744 ENCLAVE GREEN CV, GERMANTOWN, TN 38139-5715, U.S.A.
+                                        </div>
+                        
+                                        <div style="  text-align: center;
+                                                margin-bottom: 10px;">
+                                            <span style=" font-weight: bold; font-size: 14px;"><u>RELEASE AUTHORIZATION</u></span><br>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                            <div>
+                                                <span style="font-weight: bold; font-size: 13px;">Attn: {{warehouse_consignee_details[0].attn}}</span>
+                                                <span style="font-weight: bold; font-size: 13px; display: block; margin-top: 14px;">Ship-To-Address: {{warehouse_consignee_details[0].name}}<br>
+                                                    {{warehouse_consignee_details[0].addressLine1}}
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine2 !== undefined && warehouse_consignee_details[0].addressLine2 !== null && warehouse_consignee_details[0].addressLine2.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine2 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine3 !== undefined && warehouse_consignee_details[0].addressLine3 !== null && warehouse_consignee_details[0].addressLine3.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine3 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLink4 !== undefined && warehouse_consignee_details[0].addressLink4 !== null && warehouse_consignee_details[0].addressLink4.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLink4 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine5 !== undefined && warehouse_consignee_details[0].addressLine5 !== null && warehouse_consignee_details[0].addressLine5.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine5 }}
+                                                    </span>
+                                                    <span
+                                                        ng-if="warehouse_consignee_details[0].addressLine6 !== undefined && warehouse_consignee_details[0].addressLine6 !== null && warehouse_consignee_details[0].addressLine6.trim() !== ''">
+                                                        <br>{{ warehouse_consignee_details[0].addressLine6 }}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <div style="width: 30%;">
+                                                <span style="font-weight: bold; text-align: left; display: block; font-size: 13px;">Date: {{date}}</span>
+                                                <span style="font-weight: bold; text-align: left; display: block; font-size: 13px; margin-top: 14px;" >Trucking: {{warehouse_consignee_details[0].trucking}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                            <div>
+                                                <span style="font-weight: bold; font-size: 13px;">Purchase Order No: {{ commaSeparatedPoNumbers }}</span>
+                                            </div>
+                                            
+                                        </div>
+                        
+                                        <div style="width: 100%; margin-bottom: 20px;">
+                                            <table style=" width: 100%; border-collapse: collapse;">
+                                                <tr>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Invoice No</th>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Part No</th>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Size</th>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Pallet No</th>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Pieces</th>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">PO No</th>
+                                                    <th style="border: 1px solid black; padding: 8px; font-size: 12px; background-color: #B9BAE0;">Stock</th>
+                                                </tr>
+                                                <tr data-ng-repeat="next2item in CustomerReleaseViewNext">
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{next2item.invoiceNumber}}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{next2item.partNo}}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{next2item.size}} {{next2item.item}}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{next2item.prefix}} / {{next2item.startno}}</td>
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
+                                                        <span data-ng-if="next2item.pallets>0">
+                                                            {{next2item.quantity}}
+                                                        </span>
+    
+                                                        <span data-ng-if="next2item.pallets===0 || next2item.pallets===null">
+                                                            {{next2item.cartonQuantity}} ({{next2item.cartons}} cartons)
+                                                        </span>
+                                                    </td>
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
+                                                        {{next2item.poNumber}}
+                                                    </td>
+                                                    <td style="border: 1px solid black; padding: 8px; font-size: 12px;">{{next2item.refBuyer}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        
+                                        <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                                            <div>
+                                                <div style="margin-top: 20px; text-align: center; font-size: 14px;">
+                                                    TOTAL {{ getTotalPallets1() }} SKIDS AND {{ getTotalCarton1() }} CARTONS<br>
+                                                    Thank You
+                                                </div>
+                                        
+                                                <div style="margin-top: 16px; text-align: center; font-size: 14px;">
+                                                    On Behalf of PATTON INTERNATIONAL INC
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 text-center">
+                                            <button class="btn btn-sm btn-danger m2-1" type="button" id="reset_btn1" data-bs-dismiss="modal" aria-label="Close"  ng-click="DataNext2Back()">
+                                                GO BACK
+                                            </button>
+
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-dark m2-1" id="send_email" ng-click="DataSendEmail(selectedWarehouse)">SEND EMAIL</a>
+
+                                            <button class="btn btn-sm btn-dark mx-1" type="button" disabled id="email_btn_loader" style="display: none;">
+                                                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                                <span role="status">Loading...</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <script>
+        $(document).ready(function () {
+        // Initialize select2
+        $("#warehouse").select2();
+
+    });
+    </script>

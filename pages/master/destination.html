@@ -1,0 +1,98 @@
+<main class="position-relative">
+    <div ng-if="list && isLoading" class="loader ploader">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" ng-if="list">
+                <div class="card">
+                    <div class="card-header p-3">
+                        <h5 class="card-title text-uppercase mb-0">Destination</h5>
+                    </div>
+                    <form action="" class="card-body workRelease">
+                        <div class="d-flex justify-content-end mb-3">
+                            <a href="javascript:void(0);" ng-if="add" data-bs-toggle="modal" data-bs-target="#add_edit_destination"
+                                class="btn btn-sm btn-dark mx-1" ng-click="reset()">Add Destination</a>
+                        </div>
+                        
+                        <table class="table table-bordered mt-3 dataTable" ng-rows="DestinationMasterList">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th ng-sortable>Code</th>
+                                    <th ng-sortable>Name</th>
+                                    <th class="text-center" style="width: 10%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-row>
+                                    <td>{{row.code}}</td>
+                                    <td>{{row.name}}</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#add_edit_destination"
+                                            ng-click="get_destination_details(row.code)">
+                                            <i class="ri-edit-2-fill text-danger" ng-show="add"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12 unauthorize" ng-if="!list">
+                <div class="">
+                    <img src="assets/images/warning.png" style="width: 100px;">
+                    <h1 class="mt-3">401</h1>
+                    <p class="fs-4">A request was not authorized</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Release (Modal) -->
+<div class="modal fade" id="add_edit_destination" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{Destinationlabel}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" class="modal-body">
+                <div class="row gx-4 gy-3">
+                    <div class="col-md-4">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Code</span>
+                            <input type="text" name="txt_code" id="txt_code" data-ng-model="model.code" style="text-transform: uppercase;" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group d-flex flex-column align-items-start">
+                            <span>Name</span>
+                            <input type="text" name="txt_name" id="txt_name" data-ng-model="model.name" class="w-100">
+                            <input type="hidden" name="txt_id" id="txt_id" data-ng-model="model.id" class="w-100">
+                        </div>
+                    </div>
+                    
+                </div>
+                <hr>
+                <div class="col-12 text-center">
+                    <a href="javascript:void(0);" ng-click="reset()" id="reset_btn"
+                        class="btn btn-sm btn-danger mx-1">CLEAR</a>
+                    <a href="javascript:void(0);" ng-click="create(mode)"
+                        class="btn btn-sm btn-dark mx-1">{{add_btn}}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    let table = new DataTable('#myTable');
+</script>
