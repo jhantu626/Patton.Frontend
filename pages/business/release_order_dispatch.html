@@ -195,6 +195,8 @@
                                                         ng-keyup="check_qty($parent.$index+1, $index+1)"
                                                         oninput="this.value=this.value.replace(/[^0-9]/g,'');"
                                                         ng-blur="updateSelectedItems(item, dispatch)"
+                                                        ng-readonly="!item.selected"
+                                                        ng-disabled="!item.selected"
                                                         ng-init="item.reqQuantity = item.cartons > 0 ? item.cartons : item.pallets">
                                                 </td>
                                                 <td class="text-center">

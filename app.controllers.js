@@ -5965,7 +5965,6 @@
           vm.updateSelectedItems(item, dispatch);
         });
       }
-      console.log("updated selectedItems: ", vm.updateSelectedItems);
       //var isChecked = angular.element('#checkBoxClass' + (index + 1)).prop('checked');
     };
 
@@ -6002,9 +6001,10 @@
     vm.selectedItems = [];
     //vm.Orderdispatchlist = [];
 
-    vm.updateSelectedItems = function (item, dispatch) {
-      //debugger;
-      console.log(vm.Orderdispatchlist.item);
+      vm.updateSelectedItems = function (item, dispatch) {
+            vm.selectedItems = vm.selectedItems.filter(
+          selectedItem => selectedItem.slno !== item.slno
+      );
 
       if (item.selected === true) {
         vm.selectedItems.push({
@@ -6039,6 +6039,7 @@
           reference: item.reference,
         });
       } else {
+        item.reqQuantity = item.cartons == 0 ? item.pallets : item.cartons;
         vm.selectedItems = vm.selectedItems.filter(
           (selectedItem) => selectedItem.slno != item.slno
         );
@@ -6052,6 +6053,7 @@
       if (index > -1) {
         $("#checkBoxClass" + index).prop("checked", allSelected);
       }
+
 
       // vm.selectedItems = vm.selectedItems.filter(
       //     (selectedItem) => selectedItem.slno != item.slno
