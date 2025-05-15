@@ -125,7 +125,8 @@
                                                 <th class="text-center">Balance Quantity</th>
                                             </tr>
                                         </thead>
-                                        <tbody ng-repeat="dispatch in Orderdispatchlist">
+                                        <!-- <tbody ng-repeat="dispatch in Orderdispatchlist" data-ng-if="hasAllZero(dispatch)"> -->
+                                        <tbody ng-repeat="dispatch in Orderdispatchlist" >
                                             <tr>
                                                 <td colspan="9" class="text-start table-warning">
                                                     <input type="checkbox" class="allcheckBoxClass{{$index}}"
@@ -138,6 +139,7 @@
                                                 </td>
                                             </tr>
                                             <tr ng-repeat="item in dispatch.items">
+                                            <!-- <tr ng-repeat="item in dispatch.items" data-ng-if="item.pallets>0 || item.cartons>0"> -->
                                                 <td>
                                                     <label class="check-container">
                                                         <input type="checkbox" class="checkBoxClass{{$parent.$index}}"

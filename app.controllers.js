@@ -2298,6 +2298,7 @@
         breaks: vm.warehouseRelease.breaks,
       };
 
+      console.log("the payload of warehouse release " + JSON.stringify(body2));
       const url2 = rootvm.config.API_URL + rootvm.config.EndPoints.savedata;
       vm.getDataFinalSave(url2, body2);
     };
@@ -3348,8 +3349,6 @@
           (selectedItem) => selectedItem.itemNumber !== item.itemNumber
         );
       }
-
-      console.log(vm.selectedItems);
     };
 
     vm.rateUpdate = function (index) {
@@ -5898,7 +5897,7 @@
 
                 //console.log(releases); // Debugging to check the structure
                 vm.Orderdispatchlist = releases; // Assign to Angular scope
-                console.log(vm.Orderdispatchlist);
+                console.log("order dispatch list: ", vm.Orderdispatchlist);
                 vm.isLoading = false;
               } else {
                 vm.isLoading = false;
@@ -5966,6 +5965,7 @@
           vm.updateSelectedItems(item, dispatch);
         });
       }
+      console.log("updated selectedItems: ", vm.updateSelectedItems);
       //var isChecked = angular.element('#checkBoxClass' + (index + 1)).prop('checked');
     };
 
@@ -6145,7 +6145,7 @@
             x.slno2 = x.slno;
             return x;
           });
-
+          console.log("buyer code ", vm.Orderdispatchlist[0].buyer.code);
           let body = {
             type: "NORMAL",
             action: "DISPATCH",
@@ -6156,7 +6156,8 @@
             whToWh: false,
             itemNumber: "DISPATCH-000",
             partyCode: partyCode,
-            buyerCode: buyerCode,
+            // buyerCode: buyerCode,
+            buyerCode: vm.Orderdispatchlist[0].buyer.code,
             consigneeCode: consigneeCode,
             itemDate: shipmentDate,
             items: items,
@@ -6167,7 +6168,7 @@
             remarks: remarks,
           };
 
-          // console.log(body);
+          console.log("Release order dispace body: ", body);
           // return false;
 
           const url = rootvm.config.API_URL + rootvm.config.EndPoints.savedata;
@@ -6389,6 +6390,13 @@
       );
     };
 
+    vm.hasAllZero = function (dispatch) {
+      return dispatch.items.some(
+        (item) => item.pallets > 0 || item.cartons > 0
+      );
+      // return true;
+    };
+
     init = function () {
       vm.isBodyLoading = true;
       vm.norRsultFound = "";
@@ -6499,7 +6507,7 @@
         }).then((result) => {
           if (result.isConfirmed) {
             // Loading State
-            vm.isProcessingDelete=true;
+            vm.isProcessingDelete = true;
             const url =
               rootvm.config.API_URL +
               rootvm.config.EndPoints.PostInvoiceToWorkbookDelete;
@@ -6507,7 +6515,7 @@
 
             AppService.post(url, body).then(
               function (response) {
-                vm.isProcessingDelete=false;
+                vm.isProcessingDelete = false;
                 if (response.status == 200) {
                   Swal.fire({
                     allowOutsideClick: false,
@@ -6519,8 +6527,8 @@
                 }
               },
               function (error) {
-                vm.isProcessingDelete=false;
-                if(error.data.status==="FAILED"){
+                vm.isProcessingDelete = false;
+                if (error.data.status === "FAILED") {
                   Swal.fire({
                     allowOutsideClick: false,
                     icon: "error",
@@ -6528,7 +6536,7 @@
                   });
                   return;
                 }
-                if(error.data.status==="FAILURE"){
+                if (error.data.status === "FAILURE") {
                   Swal.fire({
                     allowOutsideClick: false,
                     icon: "error",
@@ -6587,14 +6595,14 @@
         return false;
       } else {
         //Loading State
-        vm.isProcessingPost=true;
+        vm.isProcessingPost = true;
         const url =
           rootvm.config.API_URL +
           rootvm.config.EndPoints.PostInvoiceToWorkbookPost;
         const body = { invoiceNo: invoiceNo };
         AppService.post(url, body).then(
           function (response) {
-            vm.isProcessingPost=false;
+            vm.isProcessingPost = false;
             if (response.status == 200) {
               Swal.fire({
                 allowOutsideClick: false,
@@ -6606,9 +6614,9 @@
             }
           },
           function (error) {
-            vm.isProcessingPost=false
+            vm.isProcessingPost = false;
             vm.isLoading = false;
-            if(error.data.status==="FAILURE"){
+            if (error.data.status === "FAILURE") {
               Swal.fire({
                 allowOutsideClick: false,
                 icon: "error",
@@ -6616,7 +6624,7 @@
               });
               return;
             }
-            if(error.data.status==="FAILED"){
+            if (error.data.status === "FAILED") {
               Swal.fire({
                 allowOutsideClick: false,
                 icon: "error",
@@ -12338,7 +12346,6 @@
             }
           }
         }
-
         vm.isModalLoader = false;
       } else {
         Swal.fire({
@@ -12359,10 +12366,39 @@
             if (response && response.data) {
               for (var i = 0; i < response.data.data.items.length; i++) {
                 var copy_item = Object.assign({}, response.data.data.items[i]);
+                copy_item.poNumbers = [copy_item.poNumber];
+                console.log("copy items: " + copy_item);
                 vm.aa = vm.CustomerReleaseViewNext.push(copy_item);
-              }
+                // vm.CustomerReleaseViewNext.sort((a, b) => {
+                //   console.log(a.item)
+                //   const itemA = a.item.toUpperCase(); // Ignore case
+                //   const itemB = b.item.toUpperCase(); // Ignore case
+                //   if (itemA < itemB) return -1;
+                //   if (itemA > itemB) return 1;
+                //   return 0;
+                // });
+                vm.CustomerReleaseViewNext.sort((a, b) => {
+                  const itemA = a.item.toUpperCase();
+                  const itemB = b.item.toUpperCase();
 
-              console.log(vm.aa);
+                  if (itemA < itemB) return -1;
+                  if (itemA > itemB) return 1;
+
+                  // If items are the same, then sort by partNo
+                  const partNoA = a.partNo.toUpperCase(); // Ignore case
+                  const partNoB = b.partNo.toUpperCase(); // Ignore case
+
+                  if (partNoA < partNoB) return -1;
+                  if (partNoA > partNoB) return 1;
+
+                  return 0;
+                });
+                console.log(
+                  "CUstomer release view next ",
+                  vm.CustomerReleaseViewNext
+                );
+              }
+              console.log("aa", vm.aa);
 
               $("#customer_warehouse_release_next").modal("show");
               $("#customer_warehouse_release_next2").modal("hide");
