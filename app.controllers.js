@@ -6001,9 +6001,9 @@
     vm.selectedItems = [];
     //vm.Orderdispatchlist = [];
 
-      vm.updateSelectedItems = function (item, dispatch) {
-            vm.selectedItems = vm.selectedItems.filter(
-          selectedItem => selectedItem.slno !== item.slno
+    vm.updateSelectedItems = function (item, dispatch) {
+      vm.selectedItems = vm.selectedItems.filter(
+        (selectedItem) => selectedItem.slno !== item.slno
       );
 
       if (item.selected === true) {
@@ -6053,7 +6053,6 @@
       if (index > -1) {
         $("#checkBoxClass" + index).prop("checked", allSelected);
       }
-
 
       // vm.selectedItems = vm.selectedItems.filter(
       //     (selectedItem) => selectedItem.slno != item.slno
@@ -12366,10 +12365,12 @@
         function (response) {
           if (response.status == 200) {
             if (response && response.data) {
+              console.log("response Data is: ", response.data);
               for (var i = 0; i < response.data.data.items.length; i++) {
                 var copy_item = Object.assign({}, response.data.data.items[i]);
-                copy_item.poNumbers = [copy_item.poNumber];
-                console.log("copy items: " + copy_item);
+                // copy_item.poNumbers = [copy_item.poNumber];
+                console.log("copy items: ", copy_item);
+                copy_item.poDetails = response.data.poDetails;
                 vm.aa = vm.CustomerReleaseViewNext.push(copy_item);
                 // vm.CustomerReleaseViewNext.sort((a, b) => {
                 //   console.log(a.item)
@@ -12395,10 +12396,6 @@
 
                   return 0;
                 });
-                console.log(
-                  "CUstomer release view next ",
-                  vm.CustomerReleaseViewNext
-                );
               }
               console.log("aa", vm.aa);
 
@@ -12466,13 +12463,54 @@
       $("#send_email").css("display", "inline-block");
       $("#email_btn_loader").css("display", "none");
 
+      const poOrderNumberOfPreviousPage=[];
+      console.log("vm.customer release view next",vm.CustomerReleaseViewNext)
+
       const poNumbers = vm.CustomerReleaseViewNext.filter(
-        (item) => item.poNumber
+        (item) => {
+          console.log(item)
+          console.log(item.poDetails)
+          if(item.poNumber!==null && item.poDetails.length>0){
+            return item.poDetails.find(po=>item.poNumber.includes(po.orderNo))
+          }
+          return item.poNumber
+        }
       )
         .map((item) => item.poNumber)
         .filter((value, index, self) => self.indexOf(value) === index);
 
-      vm.commaSeparatedPoNumbers = poNumbers.join(", ");
+      //   const poNumbers2 = vm.CustomerReleaseViewNext.filter(
+      //   (item) => {
+      //     return item.poNumber
+      //   }
+      // ).map((item) =>{
+      //   console.log("items ",item)
+      //   if(item.poNumber!==null && item.poDetails.length>0){
+      //     return item.poDetails.find(poItem=>item.poNumber.includes(poItem.orderNo))
+      //   }
+      //   return item.poNumber 
+      // })
+      // console.log("po number 2",poNumbers2)
+const poNumbers2 = Array.from(
+  new Set(
+    vm.CustomerReleaseViewNext
+      .filter(item => item.poNumber)
+      .map(item => {
+        console.log("item:", item);
+        
+        if (item.poNumber !== null && item.poDetails.length > 0) {
+          const match = item.poDetails.find(poItem => item.poNumber.includes(poItem.orderNo));
+          return match ? match.orderNo : null;
+        }
+
+        return item.poNumber;
+      })
+      .filter(Boolean) // Remove null/undefined/empty strings
+  )
+); // ✅ Remove null/undefined if any
+
+console.log("poNumbers2:", poNumbers2);
+      vm.commaSeparatedPoNumbers = poNumbers2.join(", ");
 
       $("#customer_warehouse_release_next").modal("hide");
       $("#customer_warehouse_release_next2").modal("show");

@@ -484,7 +484,7 @@
                                                         </td>
                                                         <td style="border: 1px solid black; padding: 8px; font-size: 12px;">
                                                             <select class="w-100 PoNo" name="PoNo" id="PoNo{{$index}}" ng-model="model.pono" ng-change="updateNextItem($index)">
-                                                                <option ng-repeat="option in nextitem.poNumbers" value="{{option}}">{{option}}
+                                                                <option ng-repeat="option in nextitem.poDetails" value="{{option.sequenceNo ? (option.orderNo + '#' + option.sequenceNo) : option.orderNo}}">{{option.orderNo}}{{option.sequenceNo ? ('#' + option.sequenceNo) : ''}}
                                                                 </option>
                                                             </select>
                                                             <!-- <input type="text" class="cus_release" name="PoNo" id="PoNo{{$index}}" ng-model="model.pono" ng-keyup="updateNextItem($index)"> -->
