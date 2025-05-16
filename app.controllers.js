@@ -12450,7 +12450,20 @@
       var pono = $("#PoNo" + index).val();
 
       if (index >= 0 && index < vm.CustomerReleaseViewNext.length) {
-        vm.CustomerReleaseViewNext[index].poNumber = pono;
+        const currentPoNumbersObject=vm.CustomerReleaseViewNext[index].poDetails.find(poItem=>poItem.sequenceNo?pono===poItem.orderNo+"#"+poItem.sequenceNo:poItem.orderNo===pono)
+        const comparableQuantity = vm.CustomerReleaseViewNext[index].cartons>0?vm.CustomerReleaseViewNext[index].cartonQuantity:vm.CustomerReleaseViewNext[index].quantity;
+        if(currentPoNumbersObject.qty<comparableQuantity){
+          Swal.fire({
+            allowOutsideClick: false,
+            icon: "error",
+            title: "Please enter valid PO Number",
+            text: "PO open Quantity is less than " + comparableQuantity,
+          })
+          $("#PoNo" + index).val("");
+          vm.CustomerReleaseViewNext[index].poNumber = null;
+        }else{
+          vm.CustomerReleaseViewNext[index].poNumber = pono;
+        }
       } else {
         console.error(
           "The data structure is not defined properly or index is out of bounds."
