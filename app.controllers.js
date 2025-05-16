@@ -1461,6 +1461,7 @@
     };
 
     vm.getDataForSave = function (body1) {
+      console.log("body1", JSON.stringify(body1));
       vm.ReleaseSaveDataMessage = "";
       vm.ReleaseSaveDataloader = true;
       vm.warehouseReleaseSaveData = [];
@@ -1474,8 +1475,14 @@
                 vm.ReleaseSaveDataMessage = "No Stock Available";
                 //Swal.fire({allowOutsideClick: false, text: "No Stock Available" });
               } else {
+                response.data.data.items=response.data.data.items.map((item) => {
+                  item.poDetails = response.data.poDetails;
+                  return item;
+                });
+                console.log("response", JSON.stringify(response.data));
                 vm.ReleaseSaveDataloader = false;
                 vm.ReleaseSaveDataMessage = "";
+                console.log("warehouse data," ,response.data.data)
                 vm.warehouseReleaseSaveData = response.data.data; // Update the data if not empty
               }
             }
@@ -1786,10 +1793,10 @@
 
     //------------ row update
     vm.updatePoInvoiceNumber = function (
-      type,
-      update_field,
+      type,//1
+      update_field,//1
       updatedValue,
-      index
+      index,
     ) {
       // alert(type);
       // alert(update_field);
@@ -1799,10 +1806,31 @@
       //update_field 1=item, 2=transfers, 2=breaks
       //var updatedValue = vm.model.poNumber;
       //alert(updatedValue);
+      console.log("i am update function")
       if (type == 1) {
         if (update_field == 1) {
           if (index >= 0 && index <= vm.warehouseRelease.items.length) {
-            vm.warehouseRelease.items[index].poNumber = updatedValue;
+            console.log(vm.warehouseRelease.items[index])
+            console.info("update po number",updatedValue);
+            const currentPoNumbersObject=vm.warehouseRelease.items[index].poDetails.find(poItem=>{
+              console.log(poItem)
+              return poItem.sequenceNo?updatedValue===poItem.orderNo+"#"+poItem.sequenceNo:poItem.orderNo===updatedValue
+            });
+            const comparableQuantity=vm.warehouseRelease.items[index].cartons>0?vm.warehouseRelease.items[index].cartonQuantity:vm.warehouseRelease.items[index].quantity;
+            console.log("comparableQuantity",comparableQuantity)
+            if(currentPoNumbersObject.qty<comparableQuantity){
+              Swal.fire({
+                allowOutsideClick: false,
+                icon: "error",
+                title: "Please enter valid PO Number",
+                text: "PO open Quantity is less than " + comparableQuantity,
+              });
+              vm.warehouseRelease.items[index].poNumber = null;
+              console.log("not updated ",vm.warehouseRelease.items[index]);
+            }else{
+              vm.warehouseRelease.items[index].poNumber = updatedValue;
+              console.log("updated ",vm.warehouseRelease.items[index]);
+            }
           }
         } else {
           if (index >= 0 && index < vm.warehouseRelease.breaks.length) {
@@ -1994,12 +2022,14 @@
       };
 
       const DataTempSave = () => {
+        console.log("DataTempSave",vm.warehouseReleaseSaveData);
         for (var i = 0; i < vm.warehouseReleaseSaveData.items.length; i++) {
           var copy_item = Object.assign(
             {},
             vm.warehouseReleaseSaveData.items[i]
           );
           vm.warehouseRelease.items.push(copy_item);
+          console.log("warehouseRelease.items",vm.warehouseRelease.items);
         }
 
         if (vm.model.action === "TRANSFER") {

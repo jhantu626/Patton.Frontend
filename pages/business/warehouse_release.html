@@ -265,13 +265,21 @@
                                         </td>
                                         <td>
                                             <span ng-if="model.action === 'RELEASE'">
-                                                <select class="w-100" ng-model="item.poNumber" id="ponumber" ng-change="updatePoInvoiceNumber(1,1,item.poNumber,$index)">
-                                                    <option value="selected">Select PO Number</option>
-                                                    <option ng-repeat="po in uniquePoNoList"
-                                                        value="{{po.orderNo}}" ng-selected={{po.orderNo}} === {{item.poNumber}}>
-                                                        {{po.orderNo}}
+                                                <!-- <select class="w-100" ng-model="model.poNumber" id="ponumber" ng-change="updatePoInvoiceNumber(1,1,model.poNumber,$index)">
+                                                    <option value="" disabled selected style="color: gray;">Select PO Number</option>
+                                                    <option ng-repeat="po in item.poDetails"
+                                                        value="{{po.sequenceNo ? (po.orderNo + '#' + po.sequenceNo) : po.orderNo}}" ng-selected={{po.orderNo}} === {{item.poNumber}}>
+                                                        {{po.orderNo}}{{po.sequenceNo ? ('#' + po.sequenceNo) : ''}}
                                                     </option>
-                                                </select>
+                                                </select> -->
+                                                <select class="w-100" ng-model="item.poNumber" id="ponumber_{{$index}}" ng-change="updatePoInvoiceNumber(1,1,item.poNumber,$index)">
+    <option value="" disabled selected style="color: gray;">Select PO Number</option>
+    <option ng-repeat="po in item.poDetails"
+            value="{{po.sequenceNo ? (po.orderNo + '#' + po.sequenceNo) : po.orderNo}}"
+            ng-selected="item.poNumber === (po.sequenceNo ? (po.orderNo + '#' + po.sequenceNo) : po.orderNo)">
+        {{po.orderNo}}{{po.sequenceNo ? ('#' + po.sequenceNo) : ''}}
+    </option>
+</select>
 
                                                 <!-- <select>
                                                     <option data-ng-repeat="po in uniquePoNoList" value=""></option>
