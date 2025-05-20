@@ -773,6 +773,7 @@
               } else {
                 vm.isReadonly = true;
                 vm.warehouseRelease = response.data.data;
+                console.log(vm.warehouseRelease)
                 //vm.model.itemDate = '';
                 //vm.warehouseRelease.itemDate="";
                 vm.model.type = vm.warehouseRelease.type;
@@ -2309,6 +2310,10 @@
         }
       }
 
+      // vm.warehouseRelease.items.forEach(function (item) {
+      //   item.poDetails=[]
+      // });
+
       const body2 = {
         mode: mode,
         type: vm.model.type,
@@ -2725,6 +2730,7 @@
                   "&billParty=" +
                   vm.warehouse_consignee_details[0].code +
                   "&type=N";
+                  // console.log("invoice from: "+vm.model.s)
 
                 vm.pendingInvoices = [];
                 AppService.get(url3).then(
@@ -12591,6 +12597,10 @@ console.log("poNumbers2:", poNumbers2);
         consigneeCode = selected.val();
       }
 
+      // vm.CustomerReleaseViewNext.forEach(item => {
+      //   item.poDetails = [];
+      // });
+
       const body2 = {
         type: "NORMAL",
         source: "PII",
@@ -12971,59 +12981,59 @@ console.log("poNumbers2:", poNumbers2);
         );
 
         //---- Party details ------
-        vm.PoNumberList = [];
-        const url21 =
-          rootvm.config.API_URL + rootvm.config.EndPoints.PoNumberList;
-        const body21 = {
-          OrderNo: "",
-          Party: vm.loggedInUser.party,
-        };
+        // vm.PoNumberList = [];
+        // const url21 =
+        //   rootvm.config.API_URL + rootvm.config.EndPoints.PoNumberList;
+        // const body21 = {
+        //   OrderNo: "",
+        //   Party: vm.loggedInUser.party,
+        // };
 
-        AppService.post(url21, body21).then(
-          function (response) {
-            if (response.status == 200) {
-              if (response && response.data) {
-                vm.PoNumberList = response.data;
-              }
-              //console.log(vm.PoNumberList);
-            }
-          },
-          function (error) {
-            if (error.status == 500) {
-              Swal.fire({
-                allowOutsideClick: false,
-                icon: "error",
-                title: error.data,
-              });
-            } else if (error.status == 409) {
-              const errorMessage = Array.isArray(error.data.requestError)
-                ? error.data.requestError.join("<br/>")
-                : error.data.requestError;
+        // AppService.post(url21, body21).then(
+        //   function (response) {
+        //     if (response.status == 200) {
+        //       if (response && response.data) {
+        //         vm.PoNumberList = response.data;
+        //       }
+        //       //console.log(vm.PoNumberList);
+        //     }
+        //   },
+        //   function (error) {
+        //     if (error.status == 500) {
+        //       Swal.fire({
+        //         allowOutsideClick: false,
+        //         icon: "error",
+        //         title: error.data,
+        //       });
+        //     } else if (error.status == 409) {
+        //       const errorMessage = Array.isArray(error.data.requestError)
+        //         ? error.data.requestError.join("<br/>")
+        //         : error.data.requestError;
 
-              Swal.fire({
-                allowOutsideClick: false,
-                icon: "error",
-                title: errorMessage,
-              });
-            } else if (
-              error.requestError.status == 400 ||
-              error.requestError.status == 401 ||
-              error.requestError.status == 402 ||
-              error.requestError.status == 403
-            ) {
-              Swal.fire({
-                text: Array.isArray(error.data.requestError)
-                  ? error.data.requestError.join("<br/>")
-                  : error.data.requestError,
-                allowOutsideClick: false,
-                icon: "error",
-                willClose: () => {
-                  location.reload();
-                },
-              });
-            }
-          }
-        );
+        //       Swal.fire({
+        //         allowOutsideClick: false,
+        //         icon: "error",
+        //         title: errorMessage,
+        //       });
+        //     } else if (
+        //       error.requestError.status == 400 ||
+        //       error.requestError.status == 401 ||
+        //       error.requestError.status == 402 ||
+        //       error.requestError.status == 403
+        //     ) {
+        //       Swal.fire({
+        //         text: Array.isArray(error.data.requestError)
+        //           ? error.data.requestError.join("<br/>")
+        //           : error.data.requestError,
+        //         allowOutsideClick: false,
+        //         icon: "error",
+        //         willClose: () => {
+        //           location.reload();
+        //         },
+        //       });
+        //     }
+        //   }
+        // );
 
         const date = new Date();
         let d = new Intl.DateTimeFormat("en-GB", {
