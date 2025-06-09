@@ -257,7 +257,7 @@
                 <td>{{item.partNo}}</td>
                 <td class="text-right">{{item.qty}}</td>
                 <td class="text-right">{{item.unitRate}}</td>
-                <td class="text-right">{{(item.qty*item.unitRate).toFixed(4)}}</td>
+                <td class="text-right">{{item.status!=='Error'?(item.qty*item.unitRate).toFixed(4):0}}</td>
                 <td>{{item.requiredDate | date:'dd-MMM-yyyy'}}</td>
                 <td>{{item.buyerName}}</td>
                 <td>{{item.revisionNo}}</td>

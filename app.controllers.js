@@ -773,7 +773,7 @@
               } else {
                 vm.isReadonly = true;
                 vm.warehouseRelease = response.data.data;
-                console.log(vm.warehouseRelease)
+                console.log(vm.warehouseRelease);
                 //vm.model.itemDate = '';
                 //vm.warehouseRelease.itemDate="";
                 vm.model.type = vm.warehouseRelease.type;
@@ -1476,14 +1476,16 @@
                 vm.ReleaseSaveDataMessage = "No Stock Available";
                 //Swal.fire({allowOutsideClick: false, text: "No Stock Available" });
               } else {
-                response.data.data.items=response.data.data.items.map((item) => {
-                  item.poDetails = response.data.poDetails;
-                  return item;
-                });
+                response.data.data.items = response.data.data.items.map(
+                  (item) => {
+                    item.poDetails = response.data.poDetails;
+                    return item;
+                  }
+                );
                 console.log("response", JSON.stringify(response.data));
                 vm.ReleaseSaveDataloader = false;
                 vm.ReleaseSaveDataMessage = "";
-                console.log("warehouse data," ,response.data.data)
+                console.log("warehouse data,", response.data.data);
                 vm.warehouseReleaseSaveData = response.data.data; // Update the data if not empty
               }
             }
@@ -1794,10 +1796,10 @@
 
     //------------ row update
     vm.updatePoInvoiceNumber = function (
-      type,//1
-      update_field,//1
+      type, //1
+      update_field, //1
       updatedValue,
-      index,
+      index
     ) {
       // alert(type);
       // alert(update_field);
@@ -1807,19 +1809,26 @@
       //update_field 1=item, 2=transfers, 2=breaks
       //var updatedValue = vm.model.poNumber;
       //alert(updatedValue);
-      console.log("i am update function")
+      console.log("i am update function");
       if (type == 1) {
         if (update_field == 1) {
           if (index >= 0 && index <= vm.warehouseRelease.items.length) {
-            console.log(vm.warehouseRelease.items[index])
-            console.info("update po number",updatedValue);
-            const currentPoNumbersObject=vm.warehouseRelease.items[index].poDetails.find(poItem=>{
-              console.log(poItem)
-              return poItem.sequenceNo?updatedValue===poItem.orderNo+"#"+poItem.sequenceNo:poItem.orderNo===updatedValue
+            console.log(vm.warehouseRelease.items[index]);
+            console.info("update po number", updatedValue);
+            const currentPoNumbersObject = vm.warehouseRelease.items[
+              index
+            ].poDetails.find((poItem) => {
+              console.log(poItem);
+              return poItem.sequenceNo
+                ? updatedValue === poItem.orderNo + "#" + poItem.sequenceNo
+                : poItem.orderNo === updatedValue;
             });
-            const comparableQuantity=vm.warehouseRelease.items[index].cartons>0?vm.warehouseRelease.items[index].cartonQuantity:vm.warehouseRelease.items[index].quantity;
-            console.log("comparableQuantity",comparableQuantity)
-            if(currentPoNumbersObject.qty<comparableQuantity){
+            const comparableQuantity =
+              vm.warehouseRelease.items[index].cartons > 0
+                ? vm.warehouseRelease.items[index].cartonQuantity
+                : vm.warehouseRelease.items[index].quantity;
+            console.log("comparableQuantity", comparableQuantity);
+            if (currentPoNumbersObject.qty < comparableQuantity) {
               Swal.fire({
                 allowOutsideClick: false,
                 icon: "error",
@@ -1827,10 +1836,10 @@
                 text: "PO open Quantity is less than " + comparableQuantity,
               });
               vm.warehouseRelease.items[index].poNumber = null;
-              console.log("not updated ",vm.warehouseRelease.items[index]);
-            }else{
+              console.log("not updated ", vm.warehouseRelease.items[index]);
+            } else {
               vm.warehouseRelease.items[index].poNumber = updatedValue;
-              console.log("updated ",vm.warehouseRelease.items[index]);
+              console.log("updated ", vm.warehouseRelease.items[index]);
             }
           }
         } else {
@@ -2023,14 +2032,14 @@
       };
 
       const DataTempSave = () => {
-        console.log("DataTempSave",vm.warehouseReleaseSaveData);
+        console.log("DataTempSave", vm.warehouseReleaseSaveData);
         for (var i = 0; i < vm.warehouseReleaseSaveData.items.length; i++) {
           var copy_item = Object.assign(
             {},
             vm.warehouseReleaseSaveData.items[i]
           );
           vm.warehouseRelease.items.push(copy_item);
-          console.log("warehouseRelease.items",vm.warehouseRelease.items);
+          console.log("warehouseRelease.items", vm.warehouseRelease.items);
         }
 
         if (vm.model.action === "TRANSFER") {
@@ -2653,9 +2662,11 @@
             "Field 57 Beneficiary Bank : ICICI BANK LTD. NEW YORK (ICICUS3N)<br>",
             "Final Beneficiary : PATTON INTERNATIONAL INC. - A/C # 840000002126<br>",
           ]
-
             .filter((line) => line && line.trim() !== "")
             .join("\n");
+          vm.saveBankDetails = ConsigneeAddressBankDetails.replace(/<br>/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
         } else {
           var ConsigneeAddressBankDetails = [
             "Please wire payment to Wachovia Bank",
@@ -2676,6 +2687,9 @@
           ]
             .filter((line) => line && line.trim() !== "")
             .join("\n");
+          vm.saveBankDetails = ConsigneeAddressBankDetails.replace(/<br>/g, "")
+            .replace(/\s+/g, " ")
+            .trim();
         } else {
           var ConsigneeAddressBankDetails = [
             "Please wire payment to Wachovia Bank",
@@ -2697,7 +2711,7 @@
         rootvm.config.API_URL +
         rootvm.config.EndPoints.BuyerFromConsignee +
         "conParty=" +
-        code;
+        encodeURIComponent(code);
 
       AppService.get(url1).then(
         function (response) {
@@ -2726,11 +2740,14 @@
                   rootvm.config.API_URL +
                   rootvm.config.EndPoints.pendingInvoices +
                   "conParty=" +
-                  code +
+                  encodeURIComponent(code) +
                   "&billParty=" +
-                  vm.warehouse_consignee_details[0].code +
-                  "&type=N";
-                  // console.log("invoice from: "+vm.model.s)
+                  encodeURIComponent(vm.warehouse_consignee_details[0].code) +
+                  // vm.ReleaseNoList.source +
+                  "&type=N" +
+                  "&source=" +
+                  vm.ReleaseNoList.source;
+                // console.log("invoice from: "+vm.model.s)
 
                 vm.pendingInvoices = [];
                 AppService.get(url3).then(
@@ -2842,7 +2859,7 @@
         rootvm.config.API_URL +
         rootvm.config.EndPoints.completedInvoices +
         "conParty=" +
-        code;
+        encodeURIComponent(code);
 
       AppService.get(url2).then(
         function (response) {
@@ -3118,6 +3135,9 @@
       ]
         .filter((line) => line && line.trim() !== "")
         .join("\n");
+      vm.saveBankDetails = ConsigneeAddressBankDetails.replace(/<br>/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
 
       $("#AddressBankDetails").html(ConsigneeAddressBankDetails);
     };
@@ -3252,99 +3272,104 @@
             rootvm.config.EndPoints.ReleaseInvoiceSearch;
           const body = { relInvoiceNo: relInvoiceNo1 };
 
-          AppService.post(url, body).then(
-            function (response) {
-              if (response && response.data.data) {
-                if (response.status == 200) {
-                  vm.ReleaseNoList = response.data.data;
-                  vm.ShowDetails = response.data.data.details;
-                  //console.log(vm.ShowDetails);
-                  vm.selectedItems = vm.ReleaseNoList.releases;
+          AppService.post(url, body)
+            .then(
+              function (response) {
+                if (response && response.data.data) {
+                  if (response.status == 200) {
+                    console.log("invoice release data", response.data.data);
+                    vm.ReleaseNoList = response.data.data;
+                    vm.ShowDetails = response.data.data.details;
+                    //console.log(vm.ShowDetails);
+                    vm.selectedItems = vm.ReleaseNoList.releases;
 
-                  vm.ReleaseNoList.releases.forEach(function (item) {
-                    item.selected = true; // make them checked in the UI
-                  });
-                  vm.totalAmount = response.data.data.totalAmount;
+                    vm.ReleaseNoList.releases.forEach(function (item) {
+                      item.selected = true; // make them checked in the UI
+                    });
+                    vm.totalAmount = response.data.data.totalAmount;
 
-                  vm.sumOfQty = 0; // Initialize totalAmount properly
+                    vm.sumOfQty = 0; // Initialize totalAmount properly
 
-                  for (var i = 0; i < vm.ReleaseNoList.details.length; i++) {
-                    vm.sumOfQty += vm.ReleaseNoList.details[i].qty;
+                    for (var i = 0; i < vm.ReleaseNoList.details.length; i++) {
+                      vm.sumOfQty += vm.ReleaseNoList.details[i].qty;
+                    }
+
+                    var date1 = new Date(vm.ReleaseNoList.invoiceDate);
+                    var day1 = ("0" + date1.getDate()).slice(-2);
+                    var month1 = ("0" + (date1.getMonth() + 1)).slice(-2);
+                    var year1 = date1.getFullYear();
+                    vm.model.invoiceDate = day1 + "-" + month1 + "-" + year1;
+
+                    var date2 = new Date(vm.ReleaseNoList.dueDate);
+                    var day2 = ("0" + date2.getDate()).slice(-2);
+                    var month2 = ("0" + (date2.getMonth() + 1)).slice(-2);
+                    var year2 = date2.getFullYear();
+                    vm.model.dueDate = day2 + "-" + month2 + "-" + year2;
+
+                    $("#bank_address").val(vm.ReleaseNoList.bankDetails);
+                    var formattedBankDetails =
+                      vm.ReleaseNoList.bankDetails.replace(/\r\n/g, "<br>");
+                    $("#AddressBankDetails").html(formattedBankDetails);
+                    $("#bank_details").html(formattedBankDetails);
+
+                    $("#btn_delete").prop("disabled", false);
+                    $("#btn_adjustment").prop("disabled", false);
+                    $("#btn_new").prop("disabled", false);
+                    $("#btn_save").prop("disabled", false);
+                    $("#btn_modify").prop("disabled", false);
+                    $("#btn_print").prop("disabled", false);
+
+                    $("#btn_show_details").prop("disabled", false);
+
+                    vm.isReleaseNoCheck = true;
+                    vm.isTableLoading = true;
+                    vm.isBodyLoading = false;
                   }
-
-                  var date1 = new Date(vm.ReleaseNoList.invoiceDate);
-                  var day1 = ("0" + date1.getDate()).slice(-2);
-                  var month1 = ("0" + (date1.getMonth() + 1)).slice(-2);
-                  var year1 = date1.getFullYear();
-                  vm.model.invoiceDate = day1 + "-" + month1 + "-" + year1;
-
-                  var date2 = new Date(vm.ReleaseNoList.dueDate);
-                  var day2 = ("0" + date2.getDate()).slice(-2);
-                  var month2 = ("0" + (date2.getMonth() + 1)).slice(-2);
-                  var year2 = date2.getFullYear();
-                  vm.model.dueDate = day2 + "-" + month2 + "-" + year2;
-
-                  $("#bank_address").val(vm.ReleaseNoList.bankDetails);
-                  var formattedBankDetails =
-                    vm.ReleaseNoList.bankDetails.replace(/\r\n/g, "<br>");
-                  $("#AddressBankDetails").html(formattedBankDetails);
-                  $("#bank_details").html(formattedBankDetails);
-
-                  $("#btn_delete").prop("disabled", false);
-                  $("#btn_adjustment").prop("disabled", false);
-                  $("#btn_new").prop("disabled", false);
-                  $("#btn_save").prop("disabled", false);
-                  $("#btn_modify").prop("disabled", false);
-                  $("#btn_print").prop("disabled", false);
-
-                  $("#btn_show_details").prop("disabled", false);
-
-                  vm.isReleaseNoCheck = true;
-                  vm.isTableLoading = true;
-                  vm.isBodyLoading = false;
+                  //console.log(vm.ReleaseNoList);
                 }
-                //console.log(vm.ReleaseNoList);
-              }
-            },
-            function (error) {
-              $("#addrelease").modal("hide");
-              vm.ReleaseSaveDataMessage = "Data Not Found";
+              },
+              function (error) {
+                $("#addrelease").modal("hide");
+                vm.ReleaseSaveDataMessage = "Data Not Found";
 
-              if (error.status == 500) {
-                Swal.fire({
-                  allowOutsideClick: false,
-                  icon: "error",
-                  title: error.data,
-                });
-              } else if (error.status == 409) {
-                const errorMessage = Array.isArray(error.data.requestError)
-                  ? error.data.requestError.join("<br/>")
-                  : error.data.requestError;
-
-                Swal.fire({
-                  allowOutsideClick: false,
-                  icon: "error",
-                  title: errorMessage,
-                });
-              } else if (
-                error.requestError.status == 400 ||
-                error.requestError.status == 401 ||
-                error.requestError.status == 402 ||
-                error.requestError.status == 403
-              ) {
-                Swal.fire({
-                  text: Array.isArray(error.data.requestError)
+                if (error.status == 500) {
+                  Swal.fire({
+                    allowOutsideClick: false,
+                    icon: "error",
+                    title: error.data,
+                  });
+                } else if (error.status == 409) {
+                  const errorMessage = Array.isArray(error.data.requestError)
                     ? error.data.requestError.join("<br/>")
-                    : error.data.requestError,
-                  allowOutsideClick: false,
-                  icon: "error",
-                  willClose: () => {
-                    location.reload();
-                  },
-                });
+                    : error.data.requestError;
+
+                  Swal.fire({
+                    allowOutsideClick: false,
+                    icon: "error",
+                    title: errorMessage,
+                  });
+                } else if (
+                  error.requestError.status == 400 ||
+                  error.requestError.status == 401 ||
+                  error.requestError.status == 402 ||
+                  error.requestError.status == 403
+                ) {
+                  Swal.fire({
+                    text: Array.isArray(error.data.requestError)
+                      ? error.data.requestError.join("<br/>")
+                      : error.data.requestError,
+                    allowOutsideClick: false,
+                    icon: "error",
+                    willClose: () => {
+                      location.reload();
+                    },
+                  });
+                }
               }
-            }
-          );
+            )
+            .finally(function () {
+              vm.isBodyLoading = false;
+            });
         } else {
           vm.isBodyLoading = false;
         }
@@ -3385,27 +3410,28 @@
           (selectedItem) => selectedItem.itemNumber !== item.itemNumber
         );
       }
+      vm.GetShowRateDetails();
     };
 
-    vm.rateUpdate = function (index) {
-      var qty = $("#txtQty" + index).val();
-      var rate = $("#txtRate" + index).val();
+    // vm.rateUpdate = function (index) {
+    //   var qty = $("#txtQty" + index).val();
+    //   var rate = $("#txtRate" + index).val();
 
-      var amountt = parseFloat(qty) * parseFloat(rate);
-      var amounttt = (parseFloat(qty) * parseFloat(rate)).toFixed(2);
-      $("#amount" + index).html(amounttt);
+    //   var amountt = parseFloat(qty) * parseFloat(rate);
+    //   var amounttt = (parseFloat(qty) * parseFloat(rate)).toFixed(2);
+    //   $("#amount" + index).html(amounttt);
 
-      vm.ReleaseNoList.details[index].amount = amountt;
-      vm.ReleaseNoList.details[index].rate = rate;
+    //   vm.ReleaseNoList.details[index].amount = amountt;
+    //   vm.ReleaseNoList.details[index].rate = rate;
 
-      vm.totalAmount = 0;
+    //   vm.totalAmount = 0;
 
-      for (var i = 0; i < vm.ReleaseNoList.details.length; i++) {
-        vm.totalAmount += vm.ReleaseNoList.details[i].amount;
-      }
-      //vm.totalAmount=response.data.data.totalAmount;
-      //console.log(vm.ReleaseNoList.details);
-    };
+    //   for (var i = 0; i < vm.ReleaseNoList.details.length; i++) {
+    //     vm.totalAmount += vm.ReleaseNoList.details[i].amount;
+    //   }
+    //   //vm.totalAmount=response.data.data.totalAmount;
+    //   //console.log(vm.ReleaseNoList.details);
+    // };
 
     // vm.GetShowRateDetails1 = function()
     // {
@@ -3414,6 +3440,29 @@
     //     vm.isLoading1 = false;
     //     console.log(vm.ShowDetails);
     // }
+    vm.rateUpdate = function (index) {
+      var qty = parseFloat($("#txtQty" + index).val()) || 0;
+      var rate = parseFloat($("#txtRate" + index).val()) || 0;
+
+      var amountt = qty * rate;
+
+      // Update ShowDetails
+      if (vm.ShowDetails && vm.ShowDetails[index]) {
+        vm.ShowDetails[index].amount = amountt;
+        vm.ShowDetails[index].rate = rate;
+      }
+
+      // Recalculate total
+      vm.totalAmount = 0;
+      if (vm.ShowDetails) {
+        for (var i = 0; i < vm.ShowDetails.length; i++) {
+          vm.totalAmount += parseFloat(vm.ShowDetails[i].amount || 0);
+        }
+      }
+
+      // Trigger AngularJS digest cycle
+      $scope.$apply();
+    };
 
     vm.ShowRateDetails = function () {
       var mode = $("#newMode").val();
@@ -3437,73 +3486,91 @@
       const body = {
         source: $('input[name="source"]:checked').val(),
         destination: $("#consigneeCode").val(),
-        billParty: $("#consigneeBcode").val(),
+        // billParty: $("#consigneeBcode").val(),
+        billParty: vm.selectedItems[0].billParty,
         rateDate: "",
         releases: vm.selectedItems, // This should already have the selected items.
       };
       console.log(body);
       var url =
         rootvm.config.API_URL + rootvm.config.EndPoints.ReleaseInvoicedetails;
+      vm.isBodyLoading = true;
+      AppService.post(url, body)
+        .then(
+          function (response) {
+            if (response.status == 200) {
+              if (response && response.data.data) {
+                // response.data.data.forEach(function (item) {
+                //   item.refBuyer = vm.ReleaseNoList.source;
+                //   item.sequence = item.poNo.split("#")[1];
+                //   item.poNo = item.poNo.split("#")[0];
+                // });
+                response.data.data.forEach(function (item) {
+                  item.refBuyer = vm.ReleaseNoList.source;
 
-      AppService.post(url, body).then(
-        function (response) {
-          if (response.status == 200) {
-            if (response && response.data.data) {
-              vm.ShowDetails = response.data.data;
+                  if (item.poNo && item.poNo.includes("#")) {
+                    item.sequence = item.poNo.split("#")[1];
+                    item.poNo = item.poNo.split("#")[0];
+                  }
+                });
+                vm.ShowDetails = response.data.data;
+                console.log("show details", vm.ShowDetails);
+                vm.totalAmount = 0; // Initialize totalAmount properly
 
-              vm.totalAmount = 0; // Initialize totalAmount properly
+                for (var i = 0; i < vm.ShowDetails.length; i++) {
+                  vm.totalAmount += vm.ShowDetails[i].amount;
+                }
 
-              for (var i = 0; i < vm.ShowDetails.length; i++) {
-                vm.totalAmount += vm.ShowDetails[i].amount;
+                vm.sumOfQty = 0; // Initialize totalAmount properly
+
+                for (var i = 0; i < vm.ShowDetails.length; i++) {
+                  vm.sumOfQty += vm.ShowDetails[i].qty;
+                }
+                //vm.totalAmount=response.data.data.totalAmount;
+                vm.isLoading1 = false;
+                vm.isTableLoading = true;
               }
+            }
+          },
+          function (error) {
+            if (error.status == 500) {
+              Swal.fire({
+                allowOutsideClick: false,
+                icon: "error",
+                title: error.data,
+              });
+            } else if (error.status == 409) {
+              const errorMessage = Array.isArray(error.data.requestError)
+                ? error.data.requestError.join("<br/>")
+                : error.data.requestError;
 
-              vm.sumOfQty = 0; // Initialize totalAmount properly
-
-              for (var i = 0; i < vm.ShowDetails.length; i++) {
-                vm.sumOfQty += vm.ShowDetails[i].qty;
-              }
-              //vm.totalAmount=response.data.data.totalAmount;
-              vm.isLoading1 = false;
-              vm.isTableLoading = true;
+              Swal.fire({
+                allowOutsideClick: false,
+                icon: "error",
+                title: errorMessage,
+              });
+            } else if (
+              error.requestError.status == 400 ||
+              error.requestError.status == 401 ||
+              error.requestError.status == 402 ||
+              error.requestError.status == 403
+            ) {
+              Swal.fire({
+                text: Array.isArray(error.data.requestError)
+                  ? error.data.requestError.join("<br/>")
+                  : error.data.requestError,
+                allowOutsideClick: false,
+                icon: "error",
+                willClose: () => {
+                  location.reload();
+                },
+              });
             }
           }
-        },
-        function (error) {
-          if (error.status == 500) {
-            Swal.fire({
-              allowOutsideClick: false,
-              icon: "error",
-              title: error.data,
-            });
-          } else if (error.status == 409) {
-            const errorMessage = Array.isArray(error.data.requestError)
-              ? error.data.requestError.join("<br/>")
-              : error.data.requestError;
-
-            Swal.fire({
-              allowOutsideClick: false,
-              icon: "error",
-              title: errorMessage,
-            });
-          } else if (
-            error.requestError.status == 400 ||
-            error.requestError.status == 401 ||
-            error.requestError.status == 402 ||
-            error.requestError.status == 403
-          ) {
-            Swal.fire({
-              text: Array.isArray(error.data.requestError)
-                ? error.data.requestError.join("<br/>")
-                : error.data.requestError,
-              allowOutsideClick: false,
-              icon: "error",
-              willClose: () => {
-                location.reload();
-              },
-            });
-          }
-        }
-      );
+        )
+        .finally(function () {
+          vm.isBodyLoading = false;
+        });
     };
 
     // vm.sumOfQty = function ()
@@ -3565,6 +3632,7 @@
           var releases = vm.selectedItems;
           var details = vm.ShowDetails;
           var adjustments = [];
+          console.log("show d", vm.ShowDetails);
 
           const invoiceDate1 = $("#datepicker1").val();
           const invoiceDate2 = convertDateFormat(invoiceDate1);
@@ -3592,6 +3660,10 @@
           }
         }
 
+        const totalAmountForSave = vm.ShowDetails.reduce((sum, item) => {
+          return sum + (item.amount || 0);
+        }, 0);
+
         const url =
           rootvm.config.API_URL + rootvm.config.EndPoints.ReleaseInvoiceSave;
         const body = {
@@ -3611,13 +3683,14 @@
           adjustmentDescription: "",
           dateTimeStamp: new Date().toISOString(),
           totalAmount: "",
-          bankDetails: vm.ReleaseNoList.bankDetails,
+          // BankDetails: vm.ReleaseNoList.bankDetails,
+          BankDetails: vm.saveBankDetails,
 
           releases: releases,
           details: details,
           adjustments: adjustments,
+          totalAmount: totalAmountForSave,
         };
-        //console.log(body);
         AppService.post(url, body).then(
           function (response) {
             if (response.status == 200) {
@@ -4647,6 +4720,7 @@
         function (response) {
           if (response.status == 200) {
             if (response && response.data) {
+              console.log("lookupdata", JSON.stringify(response.data));
               vm.datalookup = response.data;
             }
           }
@@ -4821,8 +4895,14 @@
               for (let i = 0; i < response.data[0].items.length; i++) {
                 const unitRate = response.data[0].items[i].unitRate;
                 const qty = response.data[0].items[i].qty;
-
-                if (unitRate && qty && !isNaN(unitRate) && !isNaN(qty)) {
+                const status = response.data[0].items[i].status;
+                if (
+                  unitRate &&
+                  qty &&
+                  !isNaN(unitRate) &&
+                  !isNaN(qty) &&
+                  status !== "Error"
+                ) {
                   totalAmount += parseFloat(unitRate) * parseFloat(qty);
                 }
               }
@@ -4837,7 +4917,8 @@
                 let numericRate = parseFloat(unitRate);
 
                 if (!isNaN(numericRate)) {
-                  vm.OrderDetailList[j].unitRate = numericRate.toFixed(4);
+                  // vm.OrderDetailList[j].unitRate = numericRate.toFixed(4);
+                  vm.OrderDetailList[j].unitRate = numericRate;
                 }
               }
             } else {
@@ -9650,10 +9731,10 @@
           return false;
         }
 
-        if ($("#partySelect").val() == "") {
-          Swal.fire({ allowOutsideClick: false, title: "Select Party" });
-          return false;
-        }
+        // if ($("#partySelect").val() == "") {
+        //   Swal.fire({ allowOutsideClick: false, title: "Select Party" });
+        //   return false;
+        // }
 
         if (mode1 == 1) {
           var mode = "CREATE";
@@ -12394,88 +12475,175 @@
       }
     };
 
+    // OLD One
+    // vm.getReleaseDetails = function (url, body) {
+    //   $("#next_btn").css("display", "none");
+    //   $("#next_btn_loader").css("display", "inline-block");
+    //   AppService.post(url, body).then(
+    //     function (response) {
+    //       if (response.status == 200) {
+    //         if (response && response.data) {
+    //           console.log("response Data is: ", response.data);
+    //           for (var i = 0; i < response.data.data.items.length; i++) {
+    //             var copy_item = Object.assign({}, response.data.data.items[i]);
+    //             // copy_item.poNumbers = [copy_item.poNumber];
+    //             console.log("copy items: ", copy_item);
+    //             copy_item.poDetails = response.data.poDetails;
+    //             vm.aa = vm.CustomerReleaseViewNext.push(copy_item);
+    //             // vm.CustomerReleaseViewNext.sort((a, b) => {
+    //             //   console.log(a.item)
+    //             //   const itemA = a.item.toUpperCase(); // Ignore case
+    //             //   const itemB = b.item.toUpperCase(); // Ignore case
+    //             //   if (itemA < itemB) return -1;
+    //             //   if (itemA > itemB) return 1;
+    //             //   return 0;
+    //             // });
+    //             vm.CustomerReleaseViewNext.sort((a, b) => {
+    //               const itemA = a.item.toUpperCase();
+    //               const itemB = b.item.toUpperCase();
+
+    //               if (itemA < itemB) return -1;
+    //               if (itemA > itemB) return 1;
+
+    //               // If items are the same, then sort by partNo
+    //               const partNoA = a.partNo.toUpperCase(); // Ignore case
+    //               const partNoB = b.partNo.toUpperCase(); // Ignore case
+
+    //               if (partNoA < partNoB) return -1;
+    //               if (partNoA > partNoB) return 1;
+
+    //               return 0;
+    //             });
+    //           }
+    //           console.log("aa", vm.aa);
+
+    //           $("#customer_warehouse_release_next").modal("show");
+    //           $("#customer_warehouse_release_next2").modal("hide");
+    //           $("#next_btn").css("display", "inline-block");
+    //           $("#next_btn_loader").css("display", "none");
+    //           //next_btn
+    //           //next_btn_loader
+    //         }
+    //       }
+    //     },
+    //     function (error) {
+    //       if (error.status == 500) {
+    //         Swal.fire({
+    //           allowOutsideClick: false,
+    //           icon: "error",
+    //           title: error.data,
+    //         });
+    //       } else if (error.status == 409) {
+    //         const errorMessage = Array.isArray(error.data.requestError)
+    //           ? error.data.requestError.join("<br/>")
+    //           : error.data.requestError;
+
+    //         Swal.fire({
+    //           allowOutsideClick: false,
+    //           icon: "error",
+    //           title: errorMessage,
+    //         });
+    //       } else if (
+    //         error.requestError.status == 400 ||
+    //         error.requestError.status == 401 ||
+    //         error.requestError.status == 402 ||
+    //         error.requestError.status == 403
+    //       ) {
+    //         Swal.fire({
+    //           text: Array.isArray(error.data.requestError)
+    //             ? error.data.requestError.join("<br/>")
+    //             : error.data.requestError,
+    //           allowOutsideClick: false,
+    //           icon: "error",
+    //           willClose: () => {
+    //             location.reload();
+    //           },
+    //         });
+    //       }
+    //     }
+    //   );
+    // };
+    // New One
     vm.getReleaseDetails = function (url, body) {
       $("#next_btn").css("display", "none");
       $("#next_btn_loader").css("display", "inline-block");
       AppService.post(url, body).then(
         function (response) {
-          if (response.status == 200) {
-            if (response && response.data) {
-              console.log("response Data is: ", response.data);
-              for (var i = 0; i < response.data.data.items.length; i++) {
-                var copy_item = Object.assign({}, response.data.data.items[i]);
-                // copy_item.poNumbers = [copy_item.poNumber];
-                console.log("copy items: ", copy_item);
-                copy_item.poDetails = response.data.poDetails;
-                vm.aa = vm.CustomerReleaseViewNext.push(copy_item);
-                // vm.CustomerReleaseViewNext.sort((a, b) => {
-                //   console.log(a.item)
-                //   const itemA = a.item.toUpperCase(); // Ignore case
-                //   const itemB = b.item.toUpperCase(); // Ignore case
-                //   if (itemA < itemB) return -1;
-                //   if (itemA > itemB) return 1;
-                //   return 0;
-                // });
-                vm.CustomerReleaseViewNext.sort((a, b) => {
-                  const itemA = a.item.toUpperCase();
-                  const itemB = b.item.toUpperCase();
-
-                  if (itemA < itemB) return -1;
-                  if (itemA > itemB) return 1;
-
-                  // If items are the same, then sort by partNo
-                  const partNoA = a.partNo.toUpperCase(); // Ignore case
-                  const partNoB = b.partNo.toUpperCase(); // Ignore case
-
-                  if (partNoA < partNoB) return -1;
-                  if (partNoA > partNoB) return 1;
-
-                  return 0;
-                });
-              }
-              console.log("aa", vm.aa);
-
-              $("#customer_warehouse_release_next").modal("show");
-              $("#customer_warehouse_release_next2").modal("hide");
-              $("#next_btn").css("display", "inline-block");
-              $("#next_btn_loader").css("display", "none");
-              //next_btn
-              //next_btn_loader
+          if (
+            response.status == 200 &&
+            response.data &&
+            response.data.data &&
+            response.data.data.items
+          ) {
+            // vm.CustomerReleaseViewNext = [];
+            for (var i = 0; i < response.data.data.items.length; i++) {
+              var copy_item = Object.assign({}, response.data.data.items[i]);
+              copy_item.poDetails = response.data.poDetails || [];
+              vm.CustomerReleaseViewNext.push(copy_item);
             }
+
+            // Sort with null-safe logic
+            vm.CustomerReleaseViewNext.sort((a, b) => {
+              const itemA = a.item ? a.item.toUpperCase() : "";
+              const itemB = b.item ? b.item.toUpperCase() : "";
+              if (itemA < itemB) return -1;
+              if (itemA > itemB) return 1;
+              // If items are the same or both empty, sort by partNo
+              const partNoA = a.partNo ? a.partNo.toUpperCase() : "";
+              const partNoB = b.partNo ? b.partNo.toUpperCase() : "";
+              if (partNoA < partNoB) return -1;
+              if (partNoA > partNoB) return 1;
+              return 0;
+            });
+
+            $("#customer_warehouse_release_next").modal("show");
+            $("#customer_warehouse_release_next2").modal("hide");
+          } else {
+            Swal.fire({
+              allowOutsideClick: false,
+              icon: "error",
+              title: "No valid data returned from the server",
+            });
           }
+          $("#next_btn").css("display", "inline-block");
+          $("#next_btn_loader").css("display", "none");
         },
         function (error) {
+          $("#next_btn").css("display", "inline-block");
+          $("#next_btn_loader").css("display", "none");
           if (error.status == 500) {
             Swal.fire({
               allowOutsideClick: false,
               icon: "error",
-              title: error.data,
+              title: error.data || "Server error occurred",
             });
           } else if (error.status == 409) {
             const errorMessage = Array.isArray(error.data.requestError)
               ? error.data.requestError.join("<br/>")
-              : error.data.requestError;
-
+              : error.data.requestError || "Conflict error occurred";
             Swal.fire({
               allowOutsideClick: false,
               icon: "error",
               title: errorMessage,
             });
           } else if (
-            error.requestError.status == 400 ||
-            error.requestError.status == 401 ||
-            error.requestError.status == 402 ||
-            error.requestError.status == 403
+            [400, 401, 402, 403].includes(error.requestError?.status)
           ) {
             Swal.fire({
               text: Array.isArray(error.data.requestError)
                 ? error.data.requestError.join("<br/>")
-                : error.data.requestError,
+                : error.data.requestError || "Unauthorized or invalid request",
               allowOutsideClick: false,
               icon: "error",
               willClose: () => {
                 location.reload();
               },
+            });
+          } else {
+            Swal.fire({
+              allowOutsideClick: false,
+              icon: "error",
+              title: "An unexpected error occurred",
             });
           }
         }
@@ -12486,18 +12654,31 @@
       var pono = $("#PoNo" + index).val();
 
       if (index >= 0 && index < vm.CustomerReleaseViewNext.length) {
-        const currentPoNumbersObject=vm.CustomerReleaseViewNext[index].poDetails.find(poItem=>poItem.sequenceNo?pono===poItem.orderNo+"#"+poItem.sequenceNo:poItem.orderNo===pono)
-        const comparableQuantity = vm.CustomerReleaseViewNext[index].cartons>0?vm.CustomerReleaseViewNext[index].cartonQuantity:vm.CustomerReleaseViewNext[index].quantity;
-        if(currentPoNumbersObject.qty<comparableQuantity){
+        const currentPoNumbersObject = vm.CustomerReleaseViewNext[
+          index
+        ].poDetails.find((poItem) =>
+          poItem.sequenceNo
+            ? pono === poItem.orderNo + "#" + poItem.sequenceNo
+            : poItem.orderNo === pono
+        );
+        const comparableQuantity =
+          vm.CustomerReleaseViewNext[index].cartons > 0
+            ? vm.CustomerReleaseViewNext[index].cartonQuantity
+            : vm.CustomerReleaseViewNext[index].quantity;
+        if (currentPoNumbersObject.qty < comparableQuantity) {
           Swal.fire({
             allowOutsideClick: false,
             icon: "error",
             title: "Please enter valid PO Number",
             text: "PO open Quantity is less than " + comparableQuantity,
-          })
-          $("#PoNo" + index).val("");
+          });
+          $("#PoNo" + index).val('');
           vm.CustomerReleaseViewNext[index].poNumber = null;
-        }else{
+          // Also reset the model used by ng-model
+          const scope = angular.element($("#PoNo" + index)).scope();
+          scope.model.pono = '';
+          scope.$apply();
+        } else {
           vm.CustomerReleaseViewNext[index].poNumber = pono;
         }
       } else {
@@ -12512,19 +12693,19 @@
       $("#send_email").css("display", "inline-block");
       $("#email_btn_loader").css("display", "none");
 
-      const poOrderNumberOfPreviousPage=[];
-      console.log("vm.customer release view next",vm.CustomerReleaseViewNext)
+      const poOrderNumberOfPreviousPage = [];
+      console.log("vm.customer release view next", vm.CustomerReleaseViewNext);
 
-      const poNumbers = vm.CustomerReleaseViewNext.filter(
-        (item) => {
-          console.log(item)
-          console.log(item.poDetails)
-          if(item.poNumber!==null && item.poDetails.length>0){
-            return item.poDetails.find(po=>item.poNumber.includes(po.orderNo))
-          }
-          return item.poNumber
+      const poNumbers = vm.CustomerReleaseViewNext.filter((item) => {
+        console.log(item);
+        console.log(item.poDetails);
+        if (item.poNumber !== null && item.poDetails.length > 0) {
+          return item.poDetails.find((po) =>
+            item.poNumber.includes(po.orderNo)
+          );
         }
-      )
+        return item.poNumber;
+      })
         .map((item) => item.poNumber)
         .filter((value, index, self) => self.indexOf(value) === index);
 
@@ -12537,28 +12718,29 @@
       //   if(item.poNumber!==null && item.poDetails.length>0){
       //     return item.poDetails.find(poItem=>item.poNumber.includes(poItem.orderNo))
       //   }
-      //   return item.poNumber 
+      //   return item.poNumber
       // })
       // console.log("po number 2",poNumbers2)
-const poNumbers2 = Array.from(
-  new Set(
-    vm.CustomerReleaseViewNext
-      .filter(item => item.poNumber)
-      .map(item => {
-        console.log("item:", item);
-        
-        if (item.poNumber !== null && item.poDetails.length > 0) {
-          const match = item.poDetails.find(poItem => item.poNumber.includes(poItem.orderNo));
-          return match ? match.orderNo : null;
-        }
+      const poNumbers2 = Array.from(
+        new Set(
+          vm.CustomerReleaseViewNext.filter((item) => item.poNumber)
+            .map((item) => {
+              console.log("item:", item);
 
-        return item.poNumber;
-      })
-      .filter(Boolean) // Remove null/undefined/empty strings
-  )
-); // ✅ Remove null/undefined if any
+              if (item.poNumber !== null && item.poDetails.length > 0) {
+                const match = item.poDetails.find((poItem) =>
+                  item.poNumber.includes(poItem.orderNo)
+                );
+                return match ? match.orderNo : null;
+              }
 
-console.log("poNumbers2:", poNumbers2);
+              return item.poNumber;
+            })
+            .filter(Boolean) // Remove null/undefined/empty strings
+        )
+      ); // ✅ Remove null/undefined if any
+
+      console.log("poNumbers2:", poNumbers2);
       vm.commaSeparatedPoNumbers = poNumbers2.join(", ");
 
       $("#customer_warehouse_release_next").modal("hide");
@@ -12621,132 +12803,138 @@ console.log("poNumbers2:", poNumbers2);
 
       const url2 = rootvm.config.API_URL + rootvm.config.EndPoints.savedata;
 
-      AppService.post(url2, body2).then(
-        function (response) {
-          if (response && response.data) {
-            if (response.status == 200) {
-              vm.EmailResponse = response.data;
+      AppService.post(url2, body2)
+        .then(
+          function (response) {
+            if (response && response.data) {
+              if (response.status == 200) {
+                vm.EmailResponse = response.data;
 
-              const body3 = {
-                action: "RELEASE",
-                type: "NORMAL",
-                source: "PII",
-                partyCode: vm.loggedInUser.party,
-                itemNumber: vm.EmailResponse.data.itemNumber,
-                consigneeCode: consigneeCode,
-              };
-              //                 console.log(body3);
-              // return false;
-              const url3 =
-                rootvm.config.API_URL +
-                rootvm.config.EndPoints.CustomerWebReleaseMailSend;
+                const body3 = {
+                  action: "RELEASE",
+                  type: "NORMAL",
+                  source: "PII",
+                  partyCode: vm.loggedInUser.party,
+                  itemNumber: vm.EmailResponse.data.itemNumber,
+                  consigneeCode: consigneeCode,
+                };
+                //                 console.log(body3);
+                // return false;
+                const url3 =
+                  rootvm.config.API_URL +
+                  rootvm.config.EndPoints.CustomerWebReleaseMailSend;
 
-              AppService.post(url3, body3).then(
-                function (response) {
-                  if (response && response.data) {
-                    if (response.status == 200) {
-                      $("#customer_warehouse_release_next").modal("hide");
-                      $("#customer_warehouse_release_next2").modal("hide");
+                AppService.post(url3, body3).then(
+                  function (response) {
+                    if (response && response.data) {
+                      if (response.status == 200) {
+                        $("#customer_warehouse_release_next").modal("hide");
+                        $("#customer_warehouse_release_next2").modal("hide");
 
-                      if (response && response.data) {
-                        Swal.fire({
-                          title: response.data.description,
-                          text:
-                            "Release Number : " +
-                            vm.EmailResponse.data.itemNumber,
-                          allowOutsideClick: false,
-                          icon: "success",
-                          willClose: () => {
-                            //location.reload();
-                            vm.get_warehouse_details();
-                          },
-                        });
+                        if (response && response.data) {
+                          Swal.fire({
+                            title: response.data.description,
+                            text:
+                              "Release Number : " +
+                              vm.EmailResponse.data.itemNumber,
+                            allowOutsideClick: false,
+                            icon: "success",
+                            willClose: () => {
+                              //location.reload();
+                              vm.get_warehouse_details();
+                            },
+                          });
+                        }
                       }
                     }
-                  }
-                },
-                function (error) {
-                  $("#customer_warehouse_release_next").modal("hide");
-                  $("#customer_warehouse_release_next2").modal("hide");
+                  },
+                  function (error) {
+                    $("#customer_warehouse_release_next").modal("hide");
+                    $("#customer_warehouse_release_next2").modal("hide");
 
-                  if (error.status == 500) {
-                    Swal.fire({
-                      allowOutsideClick: false,
-                      icon: "error",
-                      title: error.data,
-                    });
-                  } else if (error.status == 409) {
-                    const errorMessage = Array.isArray(error.data.requestError)
-                      ? error.data.requestError.join("<br/>")
-                      : error.data.requestError;
-
-                    Swal.fire({
-                      allowOutsideClick: false,
-                      icon: "error",
-                      title: errorMessage,
-                    });
-                  } else if (
-                    error.requestError.status == 400 ||
-                    error.requestError.status == 401 ||
-                    error.requestError.status == 402 ||
-                    error.requestError.status == 403 ||
-                    error.requestError.status == 405
-                  ) {
-                    Swal.fire({
-                      text: Array.isArray(error.data.requestError)
+                    if (error.status == 500) {
+                      Swal.fire({
+                        allowOutsideClick: false,
+                        icon: "error",
+                        title: error.data,
+                      });
+                    } else if (error.status == 409) {
+                      const errorMessage = Array.isArray(
+                        error.data.requestError
+                      )
                         ? error.data.requestError.join("<br/>")
-                        : error.data.requestError,
-                      allowOutsideClick: false,
-                      icon: "error",
-                      willClose: () => {
-                        location.reload();
-                      },
-                    });
+                        : error.data.requestError;
+
+                      Swal.fire({
+                        allowOutsideClick: false,
+                        icon: "error",
+                        title: errorMessage,
+                      });
+                    } else if (
+                      error.requestError.status == 400 ||
+                      error.requestError.status == 401 ||
+                      error.requestError.status == 402 ||
+                      error.requestError.status == 403 ||
+                      error.requestError.status == 405
+                    ) {
+                      Swal.fire({
+                        text: Array.isArray(error.data.requestError)
+                          ? error.data.requestError.join("<br/>")
+                          : error.data.requestError,
+                        allowOutsideClick: false,
+                        icon: "error",
+                        willClose: () => {
+                          location.reload();
+                        },
+                      });
+                    }
                   }
-                }
-              );
+                );
+              }
+            }
+          },
+          function (error) {
+            $("#customer_warehouse_release_next").modal("hide");
+            $("#customer_warehouse_release_next2").modal("hide");
+
+            if (error.status == 500) {
+              Swal.fire({
+                allowOutsideClick: false,
+                icon: "error",
+                title: error.data,
+              });
+            } else if (error.status == 409) {
+              const errorMessage = Array.isArray(error.data.requestError)
+                ? error.data.requestError.join("<br/>")
+                : error.data.requestError;
+
+              Swal.fire({
+                allowOutsideClick: false,
+                icon: "error",
+                title: errorMessage,
+              });
+            } else if (
+              error.requestError.status == 400 ||
+              error.requestError.status == 401 ||
+              error.requestError.status == 402 ||
+              error.requestError.status == 403
+            ) {
+              Swal.fire({
+                text: Array.isArray(error.data.requestError)
+                  ? error.data.requestError.join("<br/>")
+                  : error.data.requestError,
+                allowOutsideClick: false,
+                icon: "error",
+                willClose: () => {
+                  location.reload();
+                },
+              });
             }
           }
-        },
-        function (error) {
-          $("#customer_warehouse_release_next").modal("hide");
-          $("#customer_warehouse_release_next2").modal("hide");
-
-          if (error.status == 500) {
-            Swal.fire({
-              allowOutsideClick: false,
-              icon: "error",
-              title: error.data,
-            });
-          } else if (error.status == 409) {
-            const errorMessage = Array.isArray(error.data.requestError)
-              ? error.data.requestError.join("<br/>")
-              : error.data.requestError;
-
-            Swal.fire({
-              allowOutsideClick: false,
-              icon: "error",
-              title: errorMessage,
-            });
-          } else if (
-            error.requestError.status == 400 ||
-            error.requestError.status == 401 ||
-            error.requestError.status == 402 ||
-            error.requestError.status == 403
-          ) {
-            Swal.fire({
-              text: Array.isArray(error.data.requestError)
-                ? error.data.requestError.join("<br/>")
-                : error.data.requestError,
-              allowOutsideClick: false,
-              icon: "error",
-              willClose: () => {
-                location.reload();
-              },
-            });
-          }
-        }
-      );
+        )
+        .finally(() => {
+          $("#email_btn_loader").css("display", "none");
+        });
     };
 
     vm.DataNext2Back = function () {
